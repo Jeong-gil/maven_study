@@ -1,9 +1,7 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.exam.vo.NoticeVo"%>
-<%@page import="java.util.List"%>
-<%@page import="com.exam.dao.NoticeDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,46 +15,6 @@ a.active {
 }
 </style>
 </head>
-<%
-// 검색어 관련 파라미터값 가져오기. 없으면 null 리턴
-String category = request.getParameter("category"); // 검색유형
-String search = request.getParameter("search"); // 검색어
-
-// 검색어 관련 파라미터값이 null이면 빈문자열("")로 대체
-category = (category == null) ? "" : category;
-search = (search == null) ? "" : search;
-
-System.out.println("category = " + category);
-System.out.println("search = " + search);
-
-// DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
-
-// 전체 글갯수 가져오기
-//int count = noticeDao.getCountAll();
-int count = noticeDao.getCountBySearch(category, search); // 검색어 기준으로 글갯수 가져오기
-
-// 한페이지당 보여줄 글갯수 설정
-int pageSize = 10;
-
-// 사용자가 요청하는 페이지번호 파라미터값 가져오기
-String strPageNum = request.getParameter("pageNum");
-// 사용자 요청 페이지번호 정보가 없을때(null 일때)
-// 기본 요청 페이지번호를 1페이지로 설정하기
-strPageNum = (strPageNum == null) ? "1" : strPageNum;
-// 사용자 요청 페이지를 정수로 변환
-int pageNum = Integer.parseInt(strPageNum);
-
-// 가져올 첫행번호 구하기
-int startRow = (pageNum - 1) * pageSize;
-
-// 글목록 가져오기
-List<NoticeVo> noticeList = null;
-if (count > 0) {
-	//noticeList = noticeDao.getNotices(startRow, pageSize);
-	noticeList = noticeDao.getNoticesBySearch(startRow, pageSize, category, search);
-}
-%>
 <body>
 <div id="wrap">
 	<%-- header 영역 --%>
@@ -71,7 +29,7 @@ if (count > 0) {
 	
 	<article>
 		
-	<h1>텍스트 게시판 [글갯수: <%=count %>]</h1>
+	<h1>텍스트 게시판 [글갯수: ${ pageDto.count }]</h1>
 		
 	<table id="notice">
 		<tr>
@@ -81,117 +39,84 @@ if (count > 0) {
 			<th scope="col" class="tdate">작성일자</th>
 			<th scope="col" class="tread">조회수</th>
 		</tr>
-		<%
-		if (count > 0) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+		
+		<c:choose>
+		<c:when test="${ not empty noticeList }"><%-- ${ pageDto.count gt 0 } --%>
 			
-			for (NoticeVo noticeVo : noticeList) {
-		%>
+			<c:forEach var="notice" items="${ noticeList }">
 				<tr>
-					<td><%=noticeVo.getNum() %></td>
+					<td>${ notice.num }</td>
 					<td class="left">
-						<%
-						if (noticeVo.getReLev() > 0) { // 답글이면
-							%>
-							<img src="../images/level.gif" width="<%=noticeVo.getReLev() * 15 %>" height="13">
+						<c:if test="${ notice.reLev gt 0 }"><%-- 답글이면 --%>
+							<img src="../images/level.gif" width="${ notice.reLev * 15 }" height="13">
 							<img src="../images/re.gif">
-							<%
-						}
-						%>
-						<a href="content.jsp?num=<%=noticeVo.getNum() %>&pageNum=<%=pageNum %>"><%=noticeVo.getSubject() %></a>
+						</c:if>
+						<a href="content.do?num=${ notice.num }&pageNum=${ pageNum }">${ notice.subject }</a>
 					</td>
-					<td><%=noticeVo.getId() %></td>
-					<td><%=sdf.format(noticeVo.getRegDate()) %></td>
-					<td><%=noticeVo.getReadcount() %></td>
+					<td>${ notice.id }</td>
+					<td><fmt:formatDate value="${ notice.regDate }" pattern="yyyy.MM.dd"/></td>
+					<td>${ notice.readcount }</td>
 				</tr>
-				<%
-			}
-		} else { // count == 0
-			%>
+			</c:forEach>
+			
+		</c:when>		
+		<c:otherwise>
 			<tr>
 				<td colspan="5">게시판 글 없음</td>
 			</tr>
-			<%
-		}
-		%>
+		</c:otherwise>
+		</c:choose>
+
 	</table>
 
 	<div id="table_search">
-		<form action="notice.jsp" method="get">
+		<form action="notice.do" method="get">
 			<select name="category">
-				<option value="subject" <%=category.equals("subject") ? "selected" : "" %>>글제목</option>
-				<option value="content" <%=category.equals("content") ? "selected" : "" %>>글내용</option>
-				<option value="id" <%=category.equals("id") ? "selected" : "" %>>작성자ID</option>
+				<option value="subject" ${ pageDto.category eq 'subject' ? 'selected' : '' }>글제목</option>
+				<option value="content" ${ pageDto.category eq 'content' ? 'selected' : '' }>글내용</option>
+				<option value="id" ${ pageDto.category eq 'id' ? 'selected' : '' }>작성자ID</option>
 			</select>
-			<input type="text" class="input_box" name="search" value="<%=search %>">
+			<input type="text" class="input_box" name="search" value="${ pageDto.search }">
 			<input type="submit" value="검색" class="btn">
 			
-			<%
-			// 로그인 했을때만 [글쓰기] 버튼 보이기
-			String id = (String) session.getAttribute("id");
-			if (id != null) {
-				%>
-				<input type="button" value="글쓰기" class="btn" onclick="location.href='writeForm.jsp?pageNum=<%=pageNum %>'">
-				<%
-			}
-			%>
+			<%-- 로그인 했을때만 [글쓰기] 버튼 보이기 --%>
+			<c:if test="${ not empty sessionScope.id }">
+				<input type="button" value="글쓰기" class="btn" onclick="location.href='writeForm.do?pageNum=${ pageNum }'">
+			</c:if>
+
 		</form>
 	</div>
 	
 	<div class="clear"></div>
 	<div id="page_control">
-	<%
-	// 글갯수가 0보다 크면 페이지블록 계산해서 출력하기
-	if (count > 0) {
-		// 총 필요한 페이지 갯수 구하기
-		// 글50개. 한화면에보여줄글 10개 => 50/10 = 5 
-		// 글55개. 한화면에보여줄글 10개 => 55/10 = 5 + 1페이지(나머지존재) => 6
-		int pageCount = (count / pageSize) + (count % pageSize == 0 ? 0 : 1);
-		//int pageCount = (int) Math.ceil((double) count / pageSize);
+	
+	<%-- 글갯수가 0보다 크면 페이지블록 계산해서 출력하기 --%>
+	<c:if test="${ pageDto.count gt 0 }">
+		<%-- [이전] --%>
+		<c:if test="${ pageDto.startPage gt pageDto.pageBlock }">
+			<a href="notice.do?pageNum=${ pageDto.startPage - pageDto.pageBlock }&category=${ pageDto.category }&search=${ pageDto.search }">[이전]</a>
+		</c:if>
 		
-		// 한 화면에 보여줄 페이지갯수 설정
-		int pageBlock = 5;
+		<%-- 시작페이지 ~ 끝페이지 --%>
+		<c:forEach var="i" begin="${ pageDto.startPage }" end="${ pageDto.endPage }" step="1">
+			
+			<c:choose>
+			<c:when test="${ i eq pageNum }">
+				<a href="notice.do?pageNum=${ i }&category=${ pageDto.category }&search=${ pageDto.search }" class="active">[${ i }]</a>
+			</c:when>
+			<c:otherwise>
+				<a href="notice.do?pageNum=${ i }&category=${ pageDto.category }&search=${ pageDto.search }">[${ i }]</a>
+			</c:otherwise>
+			</c:choose>
+			
+		</c:forEach>
 		
-		// 화면에 보여줄 시작페이지번호 구하기
-		// 1~5          6~10          11~15          16~20       ...
-		// 1~5 => 1     6~10 => 6     11~15 => 11    16~20 => 16
-		int startPage = ((pageNum / pageBlock) - (pageNum % pageBlock == 0 ? 1 : 0)) * pageBlock + 1;
-		
-		// 화면에 보여줄 끝페이지번호 구하기
-		int endPage = startPage + pageBlock - 1;
-		if (endPage > pageCount) {
-			endPage = pageCount;
-		}
-		
-		// [이전]
-		if (startPage > pageBlock) {
-			%>
-			<a href="notice.jsp?pageNum=<%=startPage - pageBlock %>&category=<%=category %>&search=<%=search %>">[이전]</a>
-			<%
-		}
-		
-		// 1 ~ 5
-		for (int i=startPage; i<=endPage; i++) {
-			if (i == pageNum) {
-				%>
-				<a href="notice.jsp?pageNum=<%=i %>&category=<%=category %>&search=<%=search %>" class="active">[<%=i %>]</a>
-				<%
-			} else {
-				%>
-				<a href="notice.jsp?pageNum=<%=i %>&category=<%=category %>&search=<%=search %>">[<%=i %>]</a>
-				<%
-			}
-		} // for
-		
-		
-		// [다음]
-		if (endPage < pageCount) {
-			%>
-			<a href="notice.jsp?pageNum=<%=startPage + pageBlock %>&category=<%=category %>&search=<%=search %>">[다음]</a>
-			<%
-		}
-	}
-	%>
+		<%-- [다음] --%>
+		<c:if test="${ pageDto.endPage lt pageDto.pageCount }">
+			<a href="notice.do?pageNum=${ pageDto.startPage + pageDto.pageBlock }&category=${ pageDto.category }&search=${ pageDto.search }">[다음]</a>
+		</c:if>
+	</c:if>
+	
 	</div>
 		
 	</article>
