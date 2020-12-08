@@ -1,18 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-<%
-// 로그인 여부 확인
-String id = (String) session.getAttribute("id");
-if (id == null) {
-	response.sendRedirect("fileNotice.jsp");
-	return;
-}
-%>
-
-<%-- 파라미터값  pageNum  가져오기 --%>
-<% String pageNum = request.getParameter("pageNum"); %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,13 +37,13 @@ span.file-delete {
 		
 	<h1>자료실 게시판 글쓰기</h1>
 		
-	<form action="fileWritePro.jsp" method="post" enctype="multipart/form-data" name="frm">
-	<input type="hidden" name="pageNum" value="<%=pageNum %>">
+	<form action="fileWritePro.do" method="post" enctype="multipart/form-data" name="frm">
+	<input type="hidden" name="pageNum" value="${ pageNum }">
 	<table id="notice">
 		<tr>
 			<th scope="col" class="twrite">작성자</th>
 			<td class="left" width="500">
-				<input type="text" name="id" value="<%=id %>" readonly>
+				<input type="text" name="id" value="${ id }" readonly>
 			</td>
 		</tr>
 		<tr>
@@ -88,7 +75,7 @@ span.file-delete {
 	<div id="table_search">
 		<input type="submit" value="파일글쓰기" class="btn">
 		<input type="reset" value="다시쓰기" class="btn">
-		<input type="button" value="목록보기" class="btn" onclick="location.href = 'fileNotice.jsp?pageNum=<%=pageNum %>'">
+		<input type="button" value="목록보기" class="btn" onclick="location.href = 'fileNotice.do?pageNum=${ pageNum }'">
 	</div>
 	</form>
 	

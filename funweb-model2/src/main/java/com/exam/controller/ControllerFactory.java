@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.exam.controller.company.*;
+import com.exam.controller.filenotice.*;
 import com.exam.controller.member.*;
 import com.exam.controller.notice.*;
 
@@ -37,8 +38,17 @@ public class ControllerFactory {
 		map.put("/memberLoginPro", new MemberLoginProController());
 		map.put("/memberLogout", new MemberLogoutController());
 		
-		// notice 게시판
+		// notice 텍스트 게시판
 		map.put("/notice", new NoticeController());
+		map.put("/writeForm", new WriteFormController());
+		map.put("/writePro", new WriteProController());
+		map.put("/content", new ContentController());
+		
+		// fileNotice 자료실 게시판
+		map.put("/fileNotice", new FileNoticeController());
+		map.put("/fileWriteForm", new FileWriteFormController());
+		map.put("/fileWritePro", new FileWriteProController());
+		map.put("/fileContent", new FileContentController());
 		
 	} // 생성자
 

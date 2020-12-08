@@ -1,18 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-<%
-// 로그인 여부 확인
-String id = (String) session.getAttribute("id");
-if (id == null) {
-	response.sendRedirect("/center/notice.jsp");
-	return;
-}
-%>
-
-<%-- 파라미터값  pageNum  가져오기 --%>
-<% String pageNum = request.getParameter("pageNum"); %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,13 +24,13 @@ if (id == null) {
 		
 	<h1>텍스트 게시판 글쓰기</h1>
 		
-	<form action="writePro.jsp" method="post" name="frm">
-	<input type="hidden" name="pageNum" value="<%=pageNum %>">
+	<form action="writePro.do" method="post" name="frm">
+	<input type="hidden" name="pageNum" value="${ pageNum }">
 	<table id="notice">
 		<tr>
 			<th scope="col" class="twrite">작성자</th>
 			<td class="left" width="500">
-				<input type="text" name="id" value="<%=id %>" readonly>
+				<input type="text" name="id" value="${ id }" readonly>
 			</td>
 		</tr>
 		<tr>
@@ -63,7 +50,7 @@ if (id == null) {
 	<div id="table_search">
 		<input type="submit" value="글쓰기" class="btn">
 		<input type="reset" value="다시쓰기" class="btn">
-		<input type="button" value="목록보기" class="btn" onclick="location.href = 'notice.jsp?pageNum=<%=pageNum %>'">
+		<input type="button" value="목록보기" class="btn" onclick="location.href = 'notice.do?pageNum=${ pageNum }'">
 	</div>
 	</form>
 	

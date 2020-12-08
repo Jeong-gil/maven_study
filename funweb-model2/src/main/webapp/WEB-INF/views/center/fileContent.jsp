@@ -1,38 +1,7 @@
-<%@page import="com.exam.vo.AttachVo"%>
-<%@page import="java.util.List"%>
-<%@page import="com.exam.dao.AttachDao"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.exam.vo.NoticeVo"%>
-<%@page import="com.exam.dao.NoticeDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-// 파라미터값  num  pageNum  가져오기
-int num = Integer.parseInt(request.getParameter("num"));
-String pageNum = request.getParameter("pageNum");
-
-// DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
-AttachDao attachDao = AttachDao.getInstance();
-
-// 조회수 1 증가
-noticeDao.updateReadcount(num);
-
-// 글 한개 가져오기
-NoticeVo noticeVo = noticeDao.getNoticeByNum(num);
-// 첨부파일 리스트 정보 가져오기
-List<AttachVo> attachList = attachDao.getAttachesByNoNum(num);
-
-
-// 글 내용에서 "\n" 줄바꿈 문자열을 "<br>"로 교체하기
-String content = "";
-if (noticeVo.getContent() != null) {
-	content = noticeVo.getContent().replace("\n", "<br>");
-}
-
-// 작성일자 출력포맷 "2020-11-09 12:27:10"
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,74 +29,73 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	<table id="notice">
 		<tr>
 			<th scope="col" class="tno">글번호</th>
-			<td class="left" width="500"><%=noticeVo.getNum() %></td>
+			<td class="left" width="500">${ noticeVo.num }</td>
 		</tr>
 		<tr>
 			<th scope="col" class="tread">조회수</th>
-			<td class="left"><%=noticeVo.getReadcount() %></td>
+			<td class="left">${ noticeVo.readcount }</td>
 		</tr>
 		<tr>
 			<th scope="col" class="twrite">작성자</th>
-			<td class="left"><%=noticeVo.getId() %></td>
+			<td class="left">${ noticeVo.id }</td>
 		</tr>
 		<tr>
 			<th scope="col" class="tdate">작성일자</th>
-			<td class="left"><%=sdf.format(noticeVo.getRegDate()) %></td>
+			<td class="left"><fmt:formatDate value="${ noticeVo.regDate }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 		</tr>
 		<tr>
 			<th scope="col" class="ttitle">글제목</th>
-			<td class="left"><%=noticeVo.getSubject() %></td>
+			<td class="left">${ noticeVo.subject }</td>
 		</tr>
 		<tr>
 			<th scope="col" class="ttitle">글내용</th>
-			<td class="left"><%=content %></td>
+			<td class="left">${ noticeVo.content }</td>
 		</tr>
 		<tr>
 			<th scope="col" class="ttitle">첨부파일</th>
 			<td class="left">
-			<%
-			if (attachList != null && attachList.size() > 0) {
-				for (AttachVo attachVo : attachList) {
-					if (attachVo.getImage().equals("I")) {
-						%>
+			
+			<c:if test="${ not empty attachList }">
+			
+				<c:forEach var="attach" items="${ attachList }">
+				
+					<c:choose>
+					<c:when test="${ attach.image eq 'I' }">
 						<p>
-							<a href="/upload/<%=attachVo.getUploadpath() %>/<%=attachVo.getFilename() %>">
-								<img src="/upload/<%=attachVo.getUploadpath() %>/<%=attachVo.getFilename() %>" width="100" height="100">
+							<a href="/upload/${ attach.uploadpath }/${ attach.filename }">
+								<img src="/upload/${ attach.uploadpath }/${ attach.filename }" width="100" height="100">
 							</a>
 						</p>
-						<%
-					} else {
-						%>
+					</c:when>
+					<c:otherwise>
 						<p>
-							<a href="/upload/<%=attachVo.getUploadpath() %>/<%=attachVo.getFilename() %>">
-								<%=attachVo.getFilename() %>
+							<a href="/upload/${ attach.uploadpath }/${ attach.filename }">
+								${ attach.filename }
 							</a>
-						</p>					
-						<%
-					}
-				} // for
-			}
-			%>
+						</p>
+					</c:otherwise>
+					</c:choose>
+					
+				</c:forEach>
+			</c:if>
+
 			</td>
 		</tr>
 	</table>
 
 	<div id="table_search">
-		<%
-		String id = (String) session.getAttribute("id");
-		if (id != null) { // 로그인 했을때
-			if (id.equals(noticeVo.getId())) { // 로그인 아이디와 글작성자 아이디가 같을때
-				%>
+	
+		<c:if test="${ not empty id }">
+			<%-- 로그인 했을때 --%>
+			<c:if test="${ id eq noticeVo.id }">
+				<%-- 로그인 아이디와 글작성자 아이디가 같을때 --%>
 				<input type="button" value="글수정" class="btn">
 				<input type="button" value="글삭제" class="btn" onclick="remove()">
-				<%
-			}
-			%>
+			</c:if>
 			<input type="button" value="답글쓰기" class="btn">
-			<%
-		}
-		%>
-		<input type="button" value="목록보기" class="btn" onclick="location.href = 'fileNotice.jsp?pageNum=<%=pageNum %>'">
+		</c:if>
+		
+		<input type="button" value="목록보기" class="btn" onclick="location.href = 'fileNotice.do?pageNum=${ pageNum }'">
 	</div>
 	
 	<div class="clear"></div>
@@ -143,9 +111,9 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 <script>
 	function remove() {
-		let isDelete = confirm('<%=noticeVo.getNum() %>번 글을 정말 삭제하시겠습니까?');
+		let isDelete = confirm('${ noticeVo.num }번 글을 정말 삭제하시겠습니까?');
 		if (isDelete) {
-			location.href = 'fileDelete.jsp?num=<%=noticeVo.getNum() %>&pageNum=<%=pageNum %>';
+			location.href = 'fileDelete.jsp?num=${ noticeVo.num }&pageNum=${ pageNum }';
 		}
 	}
 </script>
