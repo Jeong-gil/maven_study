@@ -93,8 +93,8 @@ if (count > 0) {
 						<%
 						if (noticeVo.getReLev() > 0) { // 답글이면
 							%>
-							<img src="../images/level.gif" width="<%=noticeVo.getReLev() * 15 %>" height="13">
-							<img src="../images/re.gif">
+							<img src="/images/center/level.gif" width="<%=noticeVo.getReLev() * 15 %>" height="13">
+							<img src="/images/center/re.gif">
 							<%
 						}
 						%>

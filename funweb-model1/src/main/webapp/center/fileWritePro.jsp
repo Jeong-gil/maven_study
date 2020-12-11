@@ -13,7 +13,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%!
-
 boolean isImage(String filename) {
 	boolean result = false;
 	// 파일 확장자 문자열 추출하기
@@ -29,7 +28,6 @@ boolean isImage(String filename) {
 	}
 	return result;
 }
-
 %>
 
 <%

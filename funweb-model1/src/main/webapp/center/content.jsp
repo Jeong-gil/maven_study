@@ -83,12 +83,12 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (id != null) { // 로그인 했을때
 			if (id.equals(noticeVo.getId())) { // 로그인 아이디와 글작성자 아이디가 같을때
 				%>
-				<input type="button" value="글수정" class="btn">
-				<input type="button" value="글삭제" class="btn">
+				<input type="button" value="글수정" class="btn" onclick="location.href = 'modifyForm.jsp?num=<%=noticeVo.getNum() %>&pageNum=<%=pageNum %>'">
+				<input type="button" value="글삭제" class="btn" onclick="remove()">
 				<%
 			}
 			%>
-			<input type="button" value="답글쓰기" class="btn">
+			<input type="button" value="답글쓰기" class="btn" onclick="location.href = 'replyWriteForm.jsp?reRef=<%=noticeVo.getReRef() %>&reLev=<%=noticeVo.getReLev() %>&reSeq=<%=noticeVo.getReSeq() %>&pageNum=<%=pageNum %>'">
 			<%
 		}
 		%>
@@ -106,7 +106,26 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	<jsp:include page="/include/bottomFooter.jsp" />
 </div>
 
+
+<script>
+	function remove() {
+		var result = confirm('해당 글을 정말 삭제하시겠습니까?');
+		console.log(typeof result);
+		
+		if (result == false) {
+			return;
+		}
+		
+		location.href = 'delete.jsp?num=<%=noticeVo.getNum() %>&pageNum=<%=pageNum %>';
+	} // remove
+</script>
+
 </body>
 </html>   
+
+
+
+
+
 
     
