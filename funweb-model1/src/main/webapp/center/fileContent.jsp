@@ -19,10 +19,11 @@ AttachDao attachDao = AttachDao.getInstance();
 noticeDao.updateReadcount(num);
 
 // 글 한개 가져오기
-NoticeVo noticeVo = noticeDao.getNoticeByNum(num);
+//NoticeVo noticeVo = noticeDao.getNoticeByNum(num);
+NoticeVo noticeVo = noticeDao.getNoticeAndAttaches(num);
 // 첨부파일 리스트 정보 가져오기
-List<AttachVo> attachList = attachDao.getAttachesByNoNum(num);
-
+//List<AttachVo> attachList = attachDao.getAttachesByNoNum(num);
+List<AttachVo> attachList = noticeVo.getAttachList();
 
 // 글 내용에서 "\n" 줄바꿈 문자열을 "<br>"로 교체하기
 String content = "";

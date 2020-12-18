@@ -1,4 +1,4 @@
-<%@page import="com.exam.dao.MemberDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -6,7 +6,8 @@
 String id = request.getParameter("id");
 
 // DAO 객체 준비
-MemberDao memberDao = MemberDao.getInstance();
+//MemberDao memberDao = MemberDao.getInstance();
+MemberMyBatisDao memberDao = MemberMyBatisDao.getInstance();
 
 // 중복아이디 여부 확인
 int count = memberDao.getCountById(id);

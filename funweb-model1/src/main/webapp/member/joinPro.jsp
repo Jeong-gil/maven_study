@@ -1,3 +1,4 @@
+<%@page import="com.exam.dao.MemberMyBatisDao"%>
 <%@page import="com.exam.dao.MemberDao"%>
 <%@page import="java.sql.Timestamp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -15,7 +16,8 @@ request.setCharacterEncoding("utf-8");
 memberVo.setRegDate(new Timestamp(System.currentTimeMillis()));
 
 // DAO 객체 준비
-MemberDao memberDao = MemberDao.getInstance();
+//MemberDao memberDao = MemberDao.getInstance();
+MemberMyBatisDao memberDao = MemberMyBatisDao.getInstance();
 // 회원가입 메서드 호출
 memberDao.addMember(memberVo);
 

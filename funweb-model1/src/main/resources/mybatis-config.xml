@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<typeAliases>
+<!-- 		<typeAlias type="com.exam.vo.MemberVo" alias="memberVo"/> -->
+<!-- 		<typeAlias type="com.exam.vo.NoticeVo" alias="noticeVo"/> -->
+		<package name="com.exam.vo"/>
+	</typeAliases>
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.cj.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://localhost:3306/jspdb?useUnicode=true&amp;characterEncoding=utf8&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;serverTimezone=Asia/Seoul" />
+				<property name="username" value="myid" />
+				<property name="password" value="mypwd" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+<!-- 		<mapper class="com.exam.mapper.MemberMapper" /> -->
+<!-- 		<mapper class="com.exam.mapper.NoticeMapper" /> -->
+<!-- 		<mapper class="com.exam.mapper.AttachMapper" /> -->
+		<package name="com.exam.mapper"/>
+	</mappers>
+</configuration>
+
+
+
+
+

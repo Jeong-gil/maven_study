@@ -176,9 +176,6 @@ $('span.delete-oldfile').on('click', function () {
 	fileCount--;
 });
 
-
-
-
 </script>
 
 </body>

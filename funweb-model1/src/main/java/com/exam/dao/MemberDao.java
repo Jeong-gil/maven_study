@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.exam.vo.MemberVo;
@@ -287,6 +289,89 @@ public class MemberDao {
 			JdbcUtils.close(con, pstmt);
 		}
 	} // deleteAll()
+	
+	
+	public List<Map<String, Object>> getGenderPerCount() {
+		List<Map<String, Object>> list = new ArrayList<>();
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "";
+		
+		try {
+			con = JdbcUtils.getConnection();
+			
+			// 남녀 성별 회원수
+			sql  = "SELECT gender, count(*) as cnt ";
+			sql += "FROM member ";
+			sql += "GROUP BY gender ";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("gender", rs.getString("gender"));
+				map.put("cnt", rs.getInt("cnt"));
+				
+				list.add(map);
+			} // while
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.close(con, pstmt, rs);
+		}
+		
+		return list;
+	} // getGenderPerCount
+	
+	
+	public List<Map<String, Object>> getAgeRangePerCount() {
+		List<Map<String, Object>> list = new ArrayList<>();
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "";
+		
+		try {
+			con = JdbcUtils.getConnection();
+			
+			// 연령대별 회원수
+			sql  = "SELECT CASE  ";
+			sql += "         WHEN age BETWEEN 10 AND 19 THEN '10대' ";
+			sql += "         WHEN age BETWEEN 20 AND 39 THEN '청년층' ";
+			sql += "         WHEN age BETWEEN 40 AND 59 THEN '장년층' ";
+			sql += "         WHEN age >= 60 THEN '노년층' ";
+			sql += "         WHEN age < 10 OR age IS NULL THEN '기타' ";
+			sql += "       END as age_range ";
+			sql += "	   , count(*) as cnt ";
+			sql += "FROM member ";
+			sql += "GROUP BY age_range ";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("ageRange", rs.getString("age_range"));
+				map.put("cnt", rs.getInt("cnt"));
+				
+				list.add(map);
+			} // while
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.close(con, pstmt, rs);
+		}
+		
+		return list;
+	} // getAgeRangePerCount
 	
 	
 	public static void main(String[] args) {

@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exam.vo.AttachVo;
 import com.exam.vo.NoticeVo;
 
 public class NoticeDao {
@@ -96,6 +97,69 @@ public class NoticeDao {
 		}
 		return noticeVo;
 	} // getNoticeByNum()
+	
+	
+	// notice 테이블과 attach 테이블 왼쪽 외부조인해서 가져오기
+	public NoticeVo getNoticeAndAttaches(int num) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		NoticeVo noticeVo = new NoticeVo();
+		List<AttachVo> attachList = new ArrayList<>();
+		String sql = "";
+		
+		try {
+			con = JdbcUtils.getConnection();
+			
+			sql  = "SELECT n.num, n.id, n.subject, n.content, n.readcount, n.reg_date, n.ip, ";
+			sql += "       n.re_ref, n.re_lev, n.re_seq, ";
+			sql += "       a.num as anum, a.filename, a.uploadpath, a.image, a.no_num ";
+			sql += "FROM notice n LEFT OUTER JOIN attach a ";
+			sql += "ON n.num = a.no_num ";
+			sql += "WHERE n.num = ? ";
+			
+			pstmt = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				AttachVo attachVo = new AttachVo();
+				attachVo.setNum(rs.getInt("anum"));
+				attachVo.setFilename(rs.getString("filename"));
+				attachVo.setUploadpath(rs.getString("uploadpath"));
+				attachVo.setImage(rs.getString("image"));
+				attachVo.setNoNum(rs.getInt("no_num"));
+				
+				attachList.add(attachVo);
+			} // while
+			
+			rs.last(); // 데이터가 존재하는 행으로 커서위치 이동시키기
+			
+			noticeVo.setNum(rs.getInt("num"));
+			noticeVo.setId(rs.getString("id"));
+			noticeVo.setSubject(rs.getString("subject"));
+			noticeVo.setContent(rs.getString("content"));
+			noticeVo.setReadcount(rs.getInt("readcount"));
+			noticeVo.setRegDate(rs.getTimestamp("reg_date"));
+			noticeVo.setIp(rs.getString("ip"));
+			noticeVo.setReRef(rs.getInt("re_ref"));
+			noticeVo.setReLev(rs.getInt("re_lev")); 
+			noticeVo.setReSeq(rs.getInt("re_seq"));
+			noticeVo.setAttachList(attachList); // 첨부파일 리스트 저장
+			
+			System.out.println("조인결과 : \n" + noticeVo);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.close(con, pstmt, rs);
+		}
+		return noticeVo;
+	} // getNoticeAndAttaches
+	
+	
 	
 	
 	public void updateReadcount(int num) {

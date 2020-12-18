@@ -1,4 +1,4 @@
-<%@page import="com.exam.dao.MemberDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -11,7 +11,8 @@ String passwd = request.getParameter("passwd");
 String strKeepLogin = request.getParameter("keepLogin");
 
 // DAO 객체 준비
-MemberDao memberDao = MemberDao.getInstance();
+//MemberDao memberDao = MemberDao.getInstance();
+MemberMyBatisDao memberDao = MemberMyBatisDao.getInstance();
 
 // 로그인 확인.
 // check -1  없는 아이디
