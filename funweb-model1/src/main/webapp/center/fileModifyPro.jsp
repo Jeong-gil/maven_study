@@ -1,8 +1,9 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page import="com.exam.vo.NoticeVo"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="com.exam.vo.AttachVo"%>
-<%@page import="com.exam.dao.NoticeDao"%>
-<%@page import="com.exam.dao.AttachDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
 <%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@page import="java.io.File"%>
@@ -45,8 +46,10 @@ MultipartRequest multi = new MultipartRequest(
 
 
 // DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
-AttachDao attachDao = AttachDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+// AttachDao attachDao = AttachDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
+AttachMyBatisDao attachDao = AttachMyBatisDao.getInstance();
 
 // 게시판 글번호
 int noNum = Integer.parseInt(multi.getParameter("num"));
@@ -76,6 +79,8 @@ while (enu.hasMoreElements()) {
 
 // 삭제해야 할 첨부파일들 번호 가져오기
 String[] delFileNums = multi.getParameterValues("delfile");
+// 삭제할 첨부파일 번호 담을 리스트 준비
+List<Integer> numList = new ArrayList<>();
 
 for (String delFileNum : delFileNums) {
 	// 삭제할 첨부파일 번호를 숫자로 변환
@@ -90,9 +95,13 @@ for (String delFileNum : delFileNums) {
 	}
 	
 	// 첨부파일 DB테이블에 첨부파일번호에 해당하는 레코드 한개 삭제하기
-	attachDao.deleteAttachByNum(num);
+	//attachDao.deleteAttachByNum(num);
+	
+	numList.add(num); // 테이블에서 삭제할 첨부파일번호를 준비된 리스트에 추가하기
 } // for
 
+// 첨부파일번호들에 해당하는 첨부파일 레코드들 일괄 삭제하기
+attachDao.deleteAttachesByNums(numList);
 
 
 // NoticeVo 객체 준비

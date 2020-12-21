@@ -1,6 +1,6 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.exam.vo.NoticeVo"%>
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -9,7 +9,8 @@ int num = Integer.parseInt(request.getParameter("num"));
 String pageNum = request.getParameter("pageNum");
 
 // DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
+//NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 
 // 조회수 1 증가
 noticeDao.updateReadcount(num);

@@ -1,8 +1,7 @@
 <%@page import="java.io.File"%>
 <%@page import="com.exam.vo.AttachVo"%>
 <%@page import="java.util.List"%>
-<%@page import="com.exam.dao.AttachDao"%>
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -20,8 +19,10 @@ int num = Integer.parseInt(request.getParameter("num"));
 String pageNum = request.getParameter("pageNum");
 
 // DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
-AttachDao attachDao = AttachDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+// AttachDao attachDao = AttachDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
+AttachMyBatisDao attachDao = AttachMyBatisDao.getInstance();
 
 // 게시글번호에 첨부된 첨부파일 리스트 가져오기
 List<AttachVo> attachList = attachDao.getAttachesByNoNum(num);

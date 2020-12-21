@@ -1,6 +1,5 @@
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@page import="java.sql.Timestamp"%>
-<%@page import="com.exam.dao.JdbcUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -39,7 +38,8 @@ noticeVo.setRegDate(new Timestamp(System.currentTimeMillis()));
 noticeVo.setReadcount(0);  // 조회수
 
 // DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 
 // 답글 insert하기
 noticeDao.updateAndAddReply(noticeVo);

@@ -1,5 +1,4 @@
-<%@page import="com.exam.dao.NoticeDao"%>
-<%@page import="com.exam.dao.JdbcUtils"%>
+<%@page import="com.exam.dao.*"%>
 <%@page import="java.sql.Timestamp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -26,7 +25,8 @@ noticeVo.setReLev(0); // 주글일때는 들여쓰기 레벨이 0 (들여쓰기 
 noticeVo.setReSeq(0); // 주글일때는 글그룹 내에서 순번이 0 (첫번째)
 
 //DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 
 //주글 등록하기
 noticeDao.addNotice(noticeVo);

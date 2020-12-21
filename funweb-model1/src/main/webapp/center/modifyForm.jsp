@@ -1,5 +1,5 @@
 <%@page import="com.exam.vo.NoticeVo"%>
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -20,9 +20,10 @@ String pageNum = request.getParameter("pageNum");
 
 <%-- 글번호 num에 해당하는 글내용 VO로 가져오기 --%>
 <%
-NoticeDao dao = NoticeDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 
-NoticeVo vo = dao.getNoticeByNum(num);
+NoticeVo vo = noticeDao.getNoticeByNum(num);
 
 //request.setAttribute("noticeVo", vo);
 %>

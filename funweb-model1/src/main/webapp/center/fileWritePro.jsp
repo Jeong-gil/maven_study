@@ -1,8 +1,6 @@
-<%@page import="com.exam.dao.AttachDao"%>
 <%@page import="com.exam.vo.AttachVo"%>
 <%@page import="java.sql.Timestamp"%>
-<%@page import="com.exam.dao.JdbcUtils"%>
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="com.exam.vo.NoticeVo"%>
 <%@page import="java.io.File"%>
@@ -77,8 +75,10 @@ String pageNum = multi.getParameter("pageNum");
 
 
 //DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
-AttachDao attachDao = AttachDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+// AttachDao attachDao = AttachDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
+AttachMyBatisDao attachDao = AttachMyBatisDao.getInstance();
 
 int nextNum = JdbcUtils.getNextNum("notice");
 

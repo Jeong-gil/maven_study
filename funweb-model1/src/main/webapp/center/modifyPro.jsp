@@ -1,4 +1,4 @@
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
@@ -25,7 +25,8 @@ if (id == null) {
 
 <%-- DAO 객체 준비 후 업데이트하기 --%>
 <%
-NoticeDao noticeDao = NoticeDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 noticeDao.updateBoard(noticeVo);
 %>
 

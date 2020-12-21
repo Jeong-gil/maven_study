@@ -1,7 +1,7 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.exam.vo.NoticeVo"%>
 <%@page import="java.util.List"%>
-<%@page import="com.exam.dao.NoticeDao"%>
+<%@page import="com.exam.dao.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -30,7 +30,8 @@ System.out.println("category = " + category);
 System.out.println("search = " + search);
 
 // DAO 객체 준비
-NoticeDao noticeDao = NoticeDao.getInstance();
+// NoticeDao noticeDao = NoticeDao.getInstance();
+NoticeMyBatisDao noticeDao = NoticeMyBatisDao.getInstance();
 
 // 전체 글갯수 가져오기
 //int count = noticeDao.getCountAll();
