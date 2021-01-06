@@ -48,8 +48,8 @@ a.active {
 					<td>${ notice.num }</td>
 					<td class="left">
 						<c:if test="${ notice.reLev gt 0 }"><%-- 답글이면 --%>
-							<img src="../images/level.gif" width="${ notice.reLev * 15 }" height="13">
-							<img src="../images/re.gif">
+							<img src="/images/center/level.gif" width="${ notice.reLev * 15 }" height="13">
+							<img src="/images/center/re.gif">
 						</c:if>
 						<a href="fileContent.do?num=${ notice.num }&pageNum=${ pageNum }">${ notice.subject }</a>
 					</td>
