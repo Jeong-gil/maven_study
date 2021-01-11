@@ -61,10 +61,11 @@ public class CommentRestServlet extends HttpServlet {
 		} else if (category.equals("list")) {
 			int nno = Integer.parseInt(request.getParameter("nno")); // 게시판 글번호
 			int pageNum = Integer.parseInt(request.getParameter("pageNum")); // 댓글 페이지번호
+			int numOfRows = Integer.parseInt(request.getParameter("numOfRows")); // 한개의 댓글페이지당 댓글갯수
 			
 //			List<CommentVo> commentList = commentDao.getComments(nno);
 			
-			Criteria cri = new Criteria(pageNum, 10);
+			Criteria cri = new Criteria(pageNum, numOfRows);
 			
 			List<CommentVo> commentList = commentDao.getCommentsWithPaging(nno, cri);
 			

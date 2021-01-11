@@ -131,14 +131,29 @@ span.reply-toggle:hover {
 			<div id="app" class="panel panel-default">
 
 				<div class="panel-heading">
-					<button type="button" v-on:click="showListArea = !showListArea"
-						class="btn btn-default">
-						<span class="glyphicon glyphicon-comment"></span> 댓글 <span
-							style="color: red;">{{ totalCount }}</span>
-					</button>
-					<button type="button" class="btn btn-default" v-on:click="getList">
-						<span class="glyphicon glyphicon-refresh"></span> 새로고침
-					</button>
+					<div class="row">
+						<div class="col-md-6">
+							<button type="button" v-on:click="showListArea = !showListArea"
+								class="btn btn-default">
+								<span class="glyphicon glyphicon-comment"></span> 댓글 <span
+									style="color: red;">{{ totalCount }}</span>
+							</button>
+							<button type="button" class="btn btn-default" v-on:click="getList">
+								<span class="glyphicon glyphicon-refresh"></span> 새로고침
+							</button>
+						</div>
+						<div class="col-md-6">
+							<label for="commentCount" class="col-md-offset-3 col-md-5 control-label text-right">댓글 갯수: </label>
+							<div class="col-md-4">
+								<select id="commentCount" class="form-control pull-right" v-model="numOfRows" v-on:change="loadListWithFirstPage">
+									<option v-for="num in [5, 10, 15, 20]">{{ num }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				
+				
+
 
 				</div>
 
@@ -197,13 +212,17 @@ span.reply-toggle:hover {
 						
 						<!-- 페이지 블록 영역 -->
 						<ul v-if="totalCount > 0" class="pagination pull-right">
-							<li class="disabled"><a href="#">« 이전</a></li>
+							<li v-bind:class="{ 'disabled': !isPrevOk }">
+								<a href="#" v-on:click="setPageNo(prevBlockPage)">« 이전</a>
+							</li>
 							
 							<li v-for="item in pageBlockList" v-bind:key="item.pageNum" v-bind:class="{ 'active': item.isCurrentPage }">
 								<a href="#" v-on:click="setPageNo(item.pageNum)">{{ item.pageNum }}</a>
 							</li>
 							
-							<li><a href="#">다음 »</a></li>
+							<li v-bind:class="{ 'disabled': !isNextOk }">
+								<a href="#" v-on:click="setPageNo(nextBlockPage)">다음 »</a>
+							</li>
 						</ul>
 					</div>
 
@@ -281,6 +300,14 @@ span.reply-toggle:hover {
 				
 				isNextOk: function () { // 다음 페이지블록 존재여부
 					return this.endPage < this.pageCount;
+				},
+
+				prevBlockPage: function () {
+					return this.startPage - this.pageBlock;
+				},
+
+				nextBlockPage: function () {
+					return this.startPage + this.pageBlock;
 				}
 			},
 			watch: {
@@ -318,6 +345,9 @@ span.reply-toggle:hover {
 				},
 
 				setPageNo: function (pageNum) {
+					if (pageNum < 1 || pageNum > this.pageCount) {
+						return;
+					}
 					this.pageNo = pageNum;
 					this.getList();
 				},
@@ -328,8 +358,8 @@ span.reply-toggle:hover {
 					let vm = this; // ViewModel의 약칭. Vue객체 자기자신을 vm 변수로 저장
 					
 					$.ajax({
-						url: 'http://localhost:8090/comment',
-						data: 'category=list&nno=' + nno + '&pageNum=' + this.pageNo,
+						url: '/comment',
+						data: 'category=list&nno=' + nno + '&pageNum=' + this.pageNo + '&numOfRows=' + this.numOfRows,
 						method: 'GET',
 						success: function (response) {
 							console.log(typeof response);
@@ -349,7 +379,7 @@ span.reply-toggle:hover {
 								// 전체 댓글 갯수
 								vm.totalCount = response.totalCount;
 
-								// 페이지블록 만들기
+								// 페이지블록 만들기 (전체댓글갯수를 기준으로 페이지블록 생성)
 								vm.makePageBlock();
 							}
 						},
@@ -398,6 +428,12 @@ span.reply-toggle:hover {
 					} // for
 					
 				},
+
+				// 한페이지당 보여줄 댓글갯수 변경시 새로 댓글목록 가져오기
+				loadListWithFirstPage: function () {
+					this.pageNo = 1;
+					this.getList();
+				},
 				
 				// 주댓글 등록하기
 				addComment: function () {
@@ -414,7 +450,7 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:8090/comment?category=main', // 주댓글은 main
+						url: 'http://localhost:80/comment?category=main', // 주댓글은 main
 						data: str,
 						method: 'POST',
 						contentType: 'application/json; charset=UTF-8',
@@ -467,7 +503,7 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:8090/comment?category=reply', // 답댓글은 reply
+						url: 'http://localhost:80/comment?category=reply', // 답댓글은 reply
 						data: str,
 						method: 'POST',
 						contentType: 'application/json; charset=UTF-8',
@@ -505,7 +541,7 @@ span.reply-toggle:hover {
 					
 					// 삭제 요청
 					$.ajax({
-						url: 'http://localhost:8090/comment?cno=' + cno,
+						url: 'http://localhost:80/comment?cno=' + cno,
 						method: 'DELETE',
 						success: function (response) {
 							if (response.isSuccess == true) {
@@ -552,7 +588,7 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:8090/comment',
+						url: 'http://localhost:80/comment',
 						method: 'PUT',
 						data: strJson,
 						contentType: 'application/json; charset=UTF-8',
