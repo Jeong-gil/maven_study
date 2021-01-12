@@ -5,7 +5,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.example.mapper.MySqlMapper;
 
-public class MySqlMyBatisDao {
+public final class MySqlMyBatisDao {
 
 	private static MySqlMyBatisDao instance = new MySqlMyBatisDao();
 	

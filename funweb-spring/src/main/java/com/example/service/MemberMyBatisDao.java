@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import com.example.domain.MemberVo;
 import com.example.mapper.MemberMapper;
 
-public class MemberMyBatisDao {
+public final class MemberMyBatisDao {
 
 	private static MemberMyBatisDao instance = new MemberMyBatisDao();
 	
@@ -143,11 +143,11 @@ public class MemberMyBatisDao {
 		MemberVo memberVo = dao.getMemberById("aaa");
 //		System.out.println(memberVo);
 		
-		System.out.println("============================");
+//		System.out.println("============================");
 		
 		List<MemberVo> list = dao.getAllMembers();
 		for (MemberVo vo : list) {
-			System.out.println(vo);
+//			System.out.println(vo);
 		}
 	}
 	

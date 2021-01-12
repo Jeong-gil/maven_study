@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import com.example.domain.AttachVo;
 import com.example.mapper.AttachMapper;
 
-public class AttachMyBatisDao {
+public final class AttachMyBatisDao {
 
 	private static AttachMyBatisDao instance = new AttachMyBatisDao();
 	

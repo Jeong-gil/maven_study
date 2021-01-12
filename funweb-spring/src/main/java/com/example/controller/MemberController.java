@@ -2,11 +2,11 @@ package com.example.controller;
 
 import java.sql.Timestamp;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.domain.MemberVo;
 import com.example.service.MemberService;
@@ -18,14 +18,22 @@ import lombok.extern.java.Log;
 @RequestMapping("/member/*")
 public class MemberController {
 	
+	@Autowired
 	private MemberService memberService;
 	
-//	@RequestMapping(value = "/join", method = RequestMethod.GET)
+//	
+//	public void setMemberService(MemberService memberService) {
+//		this.memberService = memberService;
+//	}
+
+
+	//	@RequestMapping(value = "/join", method = RequestMethod.GET)
 	@GetMapping("/join")
 	public void join() {
 		log.info("GET - join() 호출됨");
-//		return "member/join";  // 메소드 리턴타입이 String일 경우
+//		return "member/join";   // 메소드 리턴타입이 String일 경우
 	}
+	
 	
 	@PostMapping("/join")
 	public String join(MemberVo memberVo) {
@@ -35,7 +43,7 @@ public class MemberController {
 		memberVo.setRegDate(new Timestamp(System.currentTimeMillis()));
 		log.info("memberVo : " + memberVo);
 		
-		// 회원가입처리
+		// 회원가입 처리
 		memberService.addMember(memberVo);
 		
 		return "redirect:/member/login";
@@ -45,5 +53,7 @@ public class MemberController {
 	public void login() {
 //		return "member/login";
 	}
+	
+	
 	
 }
