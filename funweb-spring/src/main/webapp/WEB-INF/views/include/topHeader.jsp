@@ -26,12 +26,12 @@ String id = (String) session.getAttribute("id");
 		if (id != null) {
 			%>
 			<%=id %>님 반가워요~
-			<a href="/memberLogout.do">로그아웃</a>
+			<a href="/member/logout">로그아웃</a>
 			<%
 		} else { // id == null
 			%>
-			<a href="/memberLogin.do">로그인</a>
-			 | <a href="/memberJoin.do">회원가입</a>
+			<a href="/member/login">로그인</a>
+			 | <a href="/member/join">회원가입</a>
 			<%
 		}
 		%>
@@ -46,9 +46,9 @@ String id = (String) session.getAttribute("id");
 	<nav id="top_menu">
 		<ul>
 			<li><a href="/">HOME</a></li>
-			<li><a href="/welcome.do">COMPANY</a></li>
+			<li><a href="/company/welcome">COMPANY</a></li>
 			<li><a href="#">SOLUTIONS</a></li>
-			<li><a href="/notice.do">CUSTOMER CENTER</a></li>
+			<li><a href="/notice/list">CUSTOMER CENTER</a></li>
 			<li><a href="#">CONTACT US</a></li>
 		</ul>
 	</nav>

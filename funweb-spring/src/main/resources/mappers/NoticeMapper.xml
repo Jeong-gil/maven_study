@@ -96,7 +96,7 @@
 		<result column="re_ref" property="reRef"/>
 		<result column="re_lev" property="reLev"/>
 		<result column="re_seq" property="reSeq"/>
-		<collection property="attachList" ofType="attachVo" javaType="attachVo">
+		<collection property="attachList" ofType="attachVo" javaType="arraylist">
 			<id column="anum" property="num"/>
 			<result column="filename" property="filename"/>
 			<result column="uploadpath" property="uploadpath"/>

@@ -15,4 +15,19 @@ public class HomeController {
 		return "index";
 	}
 	
+	@GetMapping("/company/welcome")
+	public String welcome() {
+		log.info("welcome() 호출됨");
+		return "company/welcome";
+		
+		// 리턴타입이 void이면 애노테이션 url 요청경로를
+		// 실행할 jsp뷰 이름으로 사용함
+		// "/company/welcome" 이렇게 매핑되어 있는 맨 앞에 '/'는 알아서 제거해준다
+	}
+	
+	@GetMapping("/company/history")
+	public void history() {
+		log.info("history() 호출됨");
+	}
+	
 }

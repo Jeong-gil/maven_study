@@ -28,7 +28,7 @@
 	<article>
 		
 	<h1>회원 가입</h1>
-	<form id="join" action="memberJoinPro.do" method="post" name="frm">
+	<form id="join" action="/member/join" method="post" name="frm">
 	<fieldset>
 		<legend>Basic Info</legend>
 		
