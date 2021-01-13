@@ -11,13 +11,6 @@ import com.example.mapper.MemberMapper;
 
 public final class MemberMyBatisDao {
 
-	private static MemberMyBatisDao instance = new MemberMyBatisDao();
-	
-	public static MemberMyBatisDao getInstance() {
-		return instance;
-	}
-	///////////////////////////////////////////////////////////////
-	
 	private SqlSessionFactory sqlSessionFactory;
 
 	private MemberMyBatisDao() {
@@ -138,17 +131,17 @@ public final class MemberMyBatisDao {
 	
 	
 	public static void main(String[] args) {
-		MemberMyBatisDao dao = MemberMyBatisDao.getInstance();
-		
-		MemberVo memberVo = dao.getMemberById("aaa");
-//		System.out.println(memberVo);
-		
-//		System.out.println("============================");
-		
-		List<MemberVo> list = dao.getAllMembers();
-		for (MemberVo vo : list) {
-//			System.out.println(vo);
-		}
+//		MemberMyBatisDao dao = MemberMyBatisDao.getInstance();
+//		
+//		MemberVo memberVo = dao.getMemberById("aaa");
+////		System.out.println(memberVo);
+//		
+////		System.out.println("============================");
+//		
+//		List<MemberVo> list = dao.getAllMembers();
+//		for (MemberVo vo : list) {
+////			System.out.println(vo);
+//		}
 	}
 	
 }

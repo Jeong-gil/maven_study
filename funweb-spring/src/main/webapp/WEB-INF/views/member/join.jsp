@@ -100,7 +100,7 @@
 		}
 
 		// id중복체크 창열기  joinIdDupCheck.jsp
-		window.open('joinIdDupCheck.do?id=' + id, 'idDupCheck', 'width=500,height=400');
+		window.open('/member/joinIdDupCheck?id=' + id, 'idDupCheck', 'width=500,height=400');
 	});
 
 	// .pass2 요소에 포커스가 해제되면

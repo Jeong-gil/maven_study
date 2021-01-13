@@ -1,12 +1,27 @@
 package com.example.controller;
 
+import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.domain.MemberVo;
 import com.example.service.MemberService;
@@ -54,6 +69,96 @@ public class MemberController {
 //		return "member/login";
 	}
 	
+	@PostMapping("/login")
+	public ResponseEntity<String> login(String id, String passwd, 
+			@RequestParam(defaultValue = "false") boolean keepLogin, HttpSession session, 
+			HttpServletResponse response) {
+		
+		int check = memberService.userCheck(id, passwd);
+		
+		// 로그인 실패시
+		if (check != 1) {
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", "text/html; charset=UTF-8");
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<script>");
+			sb.append("	alert('아이디 또는 패스워드가 일치하지 않습니다.');");
+			sb.append("	history.back();");
+			sb.append("</script>");
+			
+			return new ResponseEntity<String>(sb.toString(), headers, HttpStatus.OK);
+		}
+		
+		// 로그인 성공시
+		if (keepLogin) { // keepLogin == true
+			session.setAttribute("id", id);
+			
+			Cookie cookie = new Cookie("id", id);
+			cookie.setMaxAge(60 * 10);  // 초단위 설정  10분
+			cookie.setPath("/");
+
+			response.addCookie(cookie);
+		}
+		
+//		return "redirect:/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Location", "/");  // 리다이렉트 경로를 Location으로 설정
+		// 리다이렉트일 경우는 HttpStatus.FOUND 를 지정해야 함
+		return new ResponseEntity<String>(headers, HttpStatus.FOUND);
+		
+	}
 	
+	@GetMapping("/logout")
+	public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+		// 세션 초기화
+		session.invalidate();
+		
+		// 로그인 상태유지용 쿠키가 존재하면 삭제하기
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("id")) {
+					cookie.setMaxAge(0); // 유효기간 0으로 설정 -> 쿠키 삭제처리
+					cookie.setPath("/"); // 경로 설정
+					
+					response.addCookie(cookie); // 쿠키정보 보내기
+				}
+			}
+		}
+		
+		return "redirect:/";
+	}
 	
+	@GetMapping("/joinIdDupCheck")
+	public String joinIdDupCheck(String id, Model model) {
+		log.info("id: " + id);
+		
+		int count = memberService.getCountById(id);
+		
+		// Model 타입 객체에 뷰(JSP)에서 사용할 데이터를 저장하기
+		model.addAttribute("id", id);
+		model.addAttribute("count", count);
+		
+		return "member/joinIdDupCheck";
+		
+	}
+	
+	@GetMapping(value = "/ajax/joinIdDupChk", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	@ResponseBody  // 리턴한 객체를 JSON 문자열로 변환해서 응답을 줌
+	public Map<String, Boolean> ajaxJoinIdDupChk(String id) {
+		int count = memberService.getCountById(id);
+		
+		Map<String, Boolean> map = new HashMap<>();
+		
+		if (count == 0) {
+			map.put("isIdDup", false);
+		} else {
+			map.put("isIdDup", true);
+		}
+		return map;
+	}
 }

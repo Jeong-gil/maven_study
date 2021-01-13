@@ -37,6 +37,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- jackson-dataformat-xml -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+
 		<!-- MySQL DB 드라이버 -->
 		<dependency>
 			<groupId>mysql</groupId>

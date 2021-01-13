@@ -27,7 +27,7 @@
 	
 	<article>
 		<h1>로그인</h1>
-		<form action="memberLoginPro.do" method="post" id="join">
+		<form action="/member/login" method="post" id="join">
 			<fieldset>
 				<legend>Login Info</legend>
 				
