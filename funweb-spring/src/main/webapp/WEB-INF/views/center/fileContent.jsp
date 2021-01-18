@@ -81,24 +81,24 @@ span.reply-toggle:hover {
 				</tr>
 				<tr>
 					<th scope="col" class="ttitle">첨부파일</th>
-					<td class="left"><c:if test="${ not empty attachList }">
+					<td class="left">
+						<c:if test="${ not empty attachList }">
 
 							<c:forEach var="attach" items="${ attachList }">
 
 								<c:choose>
 									<c:when test="${ attach.image eq 'I' }">
 										<p>
-											<a href="/upload/${ attach.uploadpath }/${ attach.filename }">
-												<img
-												src="/upload/${ attach.uploadpath }/${ attach.filename }"
-												width="100" height="100">
+											<a href="/upload/${ attach.uploadpath }/${ attach.uuid }_${ attach.filename }">
+												<img src="/upload/${ attach.uploadpath }/s_${ attach.uuid }_${ attach.filename }">
 											</a>
 										</p>
 									</c:when>
 									<c:otherwise>
 										<p>
-											<a href="/upload/${ attach.uploadpath }/${ attach.filename }">
-												${ attach.filename } </a>
+											<a href="/upload/${ attach.uploadpath }/${ attach.uuid }_${ attach.filename }">
+												${ attach.filename } 
+											</a>
 										</p>
 									</c:otherwise>
 								</c:choose>
@@ -114,14 +114,14 @@ span.reply-toggle:hover {
 					<%-- 로그인 했을때 --%>
 					<c:if test="${ id eq noticeVo.id }">
 						<%-- 로그인 아이디와 글작성자 아이디가 같을때 --%>
-						<input type="button" value="글수정" class="btn">
+						<input type="button" value="글수정" class="btn" onclick="location.href = '/fileNotice/modify?num=${ noticeVo.num }&pageNum=${ pageNum }'">
 						<input type="button" value="글삭제" class="btn" onclick="remove()">
 					</c:if>
 					<input type="button" value="답글쓰기" class="btn">
 				</c:if>
 
 				<input type="button" value="목록보기" class="btn"
-					onclick="location.href = 'fileNotice.do?pageNum=${ pageNum }'">
+					onclick="location.href = '/fileNotice/list?pageNum=${ pageNum }'">
 			</div>
 
 			<div class="clear"></div>
@@ -259,7 +259,7 @@ span.reply-toggle:hover {
 		function remove() {
 			let isDelete = confirm('${ noticeVo.num }번 글을 정말 삭제하시겠습니까?');
 			if (isDelete) {
-				location.href = 'fileDelete.jsp?num=${ noticeVo.num }&pageNum=${ pageNum }';
+				location.href = '/fileNotice/delete?num=${ noticeVo.num }&pageNum=${ pageNum }';
 			}
 		}
 	</script>

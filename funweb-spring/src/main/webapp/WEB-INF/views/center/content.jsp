@@ -58,12 +58,12 @@
 			<%-- 로그인 했을때 --%>
 			<c:if test="${ id eq noticeVo.id }">
 				<%-- 로그인 아이디와 글작성자 아이디가 같을때 --%>
-				<input type="button" value="글수정" class="btn">
-				<input type="button" value="글삭제" class="btn">
+				<input type="button" value="글수정" class="btn" onclick="location.href = '/notice/modify?num=${ noticeVo.num }&pageNum=${ pageNum }'">
+				<input type="button" value="글삭제" class="btn" onclick="remove()">
 			</c:if>
-			<input type="button" value="답글쓰기" class="btn">
+			<input type="button" value="답글쓰기" class="btn" onclick="location.href = '/notice/replyWrite?reRef=${ noticeVo.reRef }&reLev=${ noticeVo.reLev }&reSeq=${ noticeVo.reSeq }&pageNum=${ pageNum }'">
 		</c:if>
-		<input type="button" value="목록보기" class="btn" onclick="location.href = 'notice.do?pageNum=${ pageNum }'">
+		<input type="button" value="목록보기" class="btn" onclick="location.href = '/notice/list?pageNum=${ pageNum }'">
 	</div>
 	
 	<div class="clear"></div>
@@ -76,6 +76,20 @@
 	<%-- footer 영역 --%>
 	<jsp:include page="/WEB-INF/views/include/bottomFooter.jsp" />
 </div>
+
+
+<script>
+	function remove() {
+		var result = confirm('해당 글을 정말 삭제하시겠습니까?');
+		console.log(typeof result);
+		
+		if (result == false) {
+			return;
+		}
+		
+		location.href = '/notice/delete?num=${ noticeVo.num }&pageNum=${ pageNum }';
+	} // remove
+</script>
 
 </body>
 </html>   

@@ -37,7 +37,7 @@ span.file-delete {
 		
 	<h1>자료실 게시판 글쓰기</h1>
 		
-	<form action="fileWritePro.do" method="post" enctype="multipart/form-data" name="frm">
+	<form action="/fileNotice/write" method="post" enctype="multipart/form-data" name="frm">
 	<input type="hidden" name="pageNum" value="${ pageNum }">
 	<table id="notice">
 		<tr>
@@ -64,7 +64,7 @@ span.file-delete {
 				<input type="button" value="첨부파일 추가" id="btnAddFile" class="btn">
 				<div id="fileBox">
 					<div>
-						<input type="file" name="filename0">
+						<input type="file" name="filename">
 						<span class="file-delete">X</span>
 					</div>
 				</div>
@@ -75,7 +75,7 @@ span.file-delete {
 	<div id="table_search">
 		<input type="submit" value="파일글쓰기" class="btn">
 		<input type="reset" value="다시쓰기" class="btn">
-		<input type="button" value="목록보기" class="btn" onclick="location.href = 'fileNotice.do?pageNum=${ pageNum }'">
+		<input type="button" value="목록보기" class="btn" onclick="location.href = '/fileNotice/list?pageNum=${ pageNum }'">
 	</div>
 	</form>
 	
@@ -93,7 +93,6 @@ span.file-delete {
 <script src="/script/jquery-3.5.1.js"></script>
 <script>
 	let fileCount = 1;
-	let fileIndex = 1;
 
 	// 정적 이벤트 연결
 	$('#btnAddFile').on('click', function () {
@@ -104,7 +103,7 @@ span.file-delete {
 		
 		let str = `
 			<div>
-				<input type="file" name="filename\${fileIndex}">
+				<input type="file" name="filename">
 				<span class="file-delete">X</span>
 			</div>
 		`;
@@ -112,7 +111,6 @@ span.file-delete {
 		$('#fileBox').append(str);
 
 		fileCount++;
-		fileIndex++;
 	});
 
 

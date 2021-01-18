@@ -1,20 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-// 로그인 상태유지 쿠키정보 가져오기
-Cookie[] cookies = request.getCookies();
-// 쿠키 name이 "id"인 쿠키객체 찾기
-if (cookies != null) {
-	for (Cookie cookie : cookies) {
-		if (cookie.getName().equals("id")) {
-			String id = cookie.getValue();
-			
-			// 로그인 인증 처리(세션에 id값 추가)
-			session.setAttribute("id", id);
-		}
-	}
-}
-
 // 세션값 가져오기
 String id = (String) session.getAttribute("id");
 // 세션값 있으면  ..님 반가워요~  [로그아웃]으로 바뀜. [회원가입]은 없어짐.

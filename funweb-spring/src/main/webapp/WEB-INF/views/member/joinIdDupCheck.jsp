@@ -47,7 +47,7 @@ page -> pageScope
 </c:choose>
 
 
-<form action="joinIdDupCheck.do" method="get" name="frm">
+<form action="/member/joinIdDupCheck" method="get" name="frm">
 	<input type="text" name="id" value="${ requestScope.id }">
 	<input type="submit" value="ID 중복확인">
 </form>

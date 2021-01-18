@@ -81,6 +81,13 @@
 			<artifactId>jstl</artifactId>
 		</dependency>
 
+		<!-- thumbnailator -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.13</version>
+		</dependency>
+
 		<!-- JUnit 단위테스트 모듈 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -9,8 +9,6 @@ import org.apache.ibatis.annotations.Select;
 import com.example.domain.AttachVo;
 
 public interface AttachMapper {
-	// INSERT, DELETE �����ϴ� �޼ҵ��� ���ϰ��� ����� ���� ������ �ǹǷ�
-	// ���� �˰�������� int������ �ϸ� ��! (UPDATE�� ���ϰ��� �����Ƿ� void�� �ؾ���) 
 	
 	int insertAttach(AttachVo attachVo);
 	
@@ -26,7 +24,7 @@ public interface AttachMapper {
 	@Delete("DELETE FROM attach where no_num = #{noNum}")
 	int deleteAttachesByNoNum(int noNum);
 	
-	// �޼ҵ��� �Ű����� Ÿ���� ����Ʈ �÷����� ���� @Param�� �� �����ؾ� ��! 
+	
 	void deleteAttachesByNums(@Param("numList") List<Integer> numList);
 }
 

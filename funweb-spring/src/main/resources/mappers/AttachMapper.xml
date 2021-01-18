@@ -5,8 +5,8 @@
 <mapper namespace="com.example.mapper.AttachMapper">
 
 	<insert id="insertAttach">
-		INSERT INTO attach (filename, uploadpath, image, no_num) 
-		VALUES (#{filename}, #{uploadpath}, #{image}, #{noNum}) 
+		INSERT INTO attach (uuid, filename, uploadpath, image, no_num) 
+		VALUES (#{uuid}, #{filename}, #{uploadpath}, #{image}, #{noNum}) 
 	</insert>
 	
 	<delete id="deleteAttachesByNums">

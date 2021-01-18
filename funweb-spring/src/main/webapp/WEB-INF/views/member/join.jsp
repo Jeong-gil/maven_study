@@ -34,7 +34,8 @@
 		
 		<label>User ID</label>
 		<input type="text" name="id" class="id" required> 
-		<input type="button" value="ID 중복확인" class="dup" id="btnDupChk"><br>
+		<input type="button" value="ID 중복확인" class="dup" id="btnDupChk">
+		<span id="msgIdDup"></span><br>
 		
 		<label>Password</label> 
 		<input type="password" name="passwd" class="pass pass1" required><br>
@@ -88,6 +89,32 @@
 
 <script src="/script/jquery-3.5.1.js"></script>
 <script>
+	$('input[name="id"]').keyup(function () {
+		let id = $(this).val();
+	
+		if (id.length <= 2) { // 아이디 두글자 까지는 중복체크 안함
+			return;
+		}
+	
+		// 아이디 세글자 부터는 Ajax로 아이디 중복체크하기
+		$.ajax({
+			url: '/member/ajax/joinIdDupChk',
+			data: { id: id },
+			//method: 'GET',
+			success: function (response) {
+				console.log(typeof response);
+				console.log(response);
+	
+				if (response.isIdDup) {
+					$('span#msgIdDup').html('이미 사용중인 아이디 입니다.').css('color', 'red');
+				} else {
+					$('span#msgIdDup').html('사용 가능한 아이디 입니다.').css('color', 'green');
+				}
+			}
+		});
+	});
+
+
 	$('#btnDupChk').click(function () {
 		
 		let id = $('input[name="id"]').val();
