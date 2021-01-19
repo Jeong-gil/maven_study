@@ -358,30 +358,27 @@ span.reply-toggle:hover {
 					let vm = this; // ViewModel의 약칭. Vue객체 자기자신을 vm 변수로 저장
 					
 					$.ajax({
-						url: '/comment',
-						data: 'category=list&nno=' + nno + '&pageNum=' + this.pageNo + '&numOfRows=' + this.numOfRows,
+						url: '/comment/pages/' + nno + '/' + this.pageNo + '/' + this.numOfRows,
 						method: 'GET',
+// 						dataType: 'json',
 						success: function (response) {
 							console.log(typeof response);
 							console.log(response);
-
-							if (response.isSuccess) {
 								
-								for (let comment of response.commentList) {
-									comment.writeOk = false; // 오브젝트마다 writeOk 필드 추가
-									console.log(comment);
-								} // for
+							for (let comment of response.commentList) {
+								comment.writeOk = false; // 오브젝트마다 writeOk 필드 추가
+								console.log(comment);
+							} // for
 
-								// 서버에서 응답받은 데이터를 리액티브 데이터에 저장
-								// 리액티브 데이터가 변경되면 즉시 바인딩된 화면도 렌더링됨
-								vm.commentList = response.commentList;
+							// 서버에서 응답받은 데이터를 리액티브 데이터에 저장
+							// 리액티브 데이터가 변경되면 즉시 바인딩된 화면도 렌더링됨
+							vm.commentList = response.commentList;
 
-								// 전체 댓글 갯수
-								vm.totalCount = response.totalCount;
+							// 전체 댓글 갯수
+							vm.totalCount = response.totalCount;
 
-								// 페이지블록 만들기 (전체댓글갯수를 기준으로 페이지블록 생성)
-								vm.makePageBlock();
-							}
+							// 페이지블록 만들기 (전체댓글갯수를 기준으로 페이지블록 생성)
+							vm.makePageBlock();
 						},
 						error: function () {
 							alert('댓글 리스트 가져오기 오류 발생...')
@@ -450,29 +447,34 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:80/comment?category=main', // 주댓글은 main
+						url: '/comment/new',
 						data: str,
 						method: 'POST',
 						contentType: 'application/json; charset=UTF-8',
 						success: function (response) {
 							console.log(response);
 
-							if (response.isSuccess) {
-								// 현재 페이지 다시 불러오기
-								vm.getList();
-								
-								// 다른방식 구현
-// 								let comment = response.comment;
-// 								comment.writeOk = false; // writeOk 필드 추가
-// 								vm.commentList.push(comment); // 리스트 맨 뒤에 댓글 추가
-// 								vm.inputComment = '';  // 입력상자 비우기
-// 								vm.totalCount++;  // 댓글갯수 증가
-							} else {
-								alert(response.description);
-							}
+							// 현재 페이지 다시 불러오기
+							vm.getList();
+							
+							// 다른방식 구현
+// 							let comment = response.comment;
+// 							comment.writeOk = false; // writeOk 필드 추가
+// 							vm.commentList.push(comment); // 리스트 맨 뒤에 댓글 추가
+// 							vm.inputComment = '';  // 입력상자 비우기
+// 							vm.totalCount++;  // 댓글갯수 증가
 						},
-						error: function () {
-							alert('주댓글 등록 에러 발생...');
+						error: function (req, status, err) {
+							console.log('code: ' + req.status + '\n message: ' + req.responseText + '\n error: ' + err);
+							console.log(typeof req.responseText); // string
+
+							let obj = JSON.parse(req.responseText); // <-> JSON.stringify()
+							console.log(typeof obj) // object
+							
+							if (obj.isLogin == false) {
+								alert('로그인 사용자만 댓글 작성이 가능합니다.');
+								location.href = '/member/login';
+							}
 						}
 					});
 				}, // addComment
@@ -503,21 +505,18 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:80/comment?category=reply', // 답댓글은 reply
+						url: '/comment/new/reply', // 답댓글은 /reply
 						data: str,
 						method: 'POST',
 						contentType: 'application/json; charset=UTF-8',
 						success: function (response) {
 							console.log(response);
 
-							if (response.isSuccess) {
-								vm.getList();
-							} else {
-								alert(response.description);
-							}
+							vm.getList();
 						},
 						error: function () {
-							alert('답댓글 등록 에러 발생...');
+							alert('로그인 사용자만 댓글 작성이 가능합니다.');
+							location.href = '/member/login';
 						}
 					});
 					
@@ -541,20 +540,20 @@ span.reply-toggle:hover {
 					
 					// 삭제 요청
 					$.ajax({
-						url: 'http://localhost:80/comment?cno=' + cno,
+						url: '/comment/' + cno,
 						method: 'DELETE',
 						success: function (response) {
-							if (response.isSuccess == true) {
-								// 현재 페이지 다시 불러오기
-								vm.getList();
+							console.log(response);
+							// 현재 페이지 다시 불러오기
+							vm.getList();
 
-								// 다른방식 구현
-// 								vm.commentList.splice(index, 1); // 삭제한 댓글 아이템을 리스트에서 제거
-// 								vm.totalCount--; // 댓글갯수 1 감소
-							}
+							// 다른방식 구현
+// 							vm.commentList.splice(index, 1); // 삭제한 댓글 아이템을 리스트에서 제거
+// 							vm.totalCount--; // 댓글갯수 1 감소
 						},
 						error: function () {
-							alert('댓글 삭제 에러 발생...')
+							alert('로그인 사용자만 댓글 삭제가 가능합니다.');
+							location.href = '/member/login';
 						}
 					});
 				},
@@ -588,23 +587,24 @@ span.reply-toggle:hover {
 					let vm = this;
 					
 					$.ajax({
-						url: 'http://localhost:80/comment',
+						url: '/comment/modify',
 						method: 'PUT',
 						data: strJson,
 						contentType: 'application/json; charset=UTF-8',
 						success: function (response) {
-							if (response.isSuccess == true) {
-								// 현재페이지 다시 불러오기
-								vm.getList();
+							// 현재페이지 다시 불러오기
+							vm.getList();
 
-								// 다른방식 구현
-// 								let cmt = response.comment;
-// 								cmt.writeOk = false;
-// 								//vm.commentList[index] = cmt; //변경내용을 Vue객체가 알아차라지 못해서 화면랜더링이 일어나지 않음.
-// 								vm.commentList.splice(index, 1, cmt); // 인덱스 위치부터 1개를 cmt 객체로 수정
-							}
+							// 다른방식 구현
+// 							let cmt = response.comment;
+// 							cmt.writeOk = false;
+// 							//vm.commentList[index] = cmt; //변경내용을 Vue객체가 알아차라지 못해서 화면랜더링이 일어나지 않음.
+// 							vm.commentList.splice(index, 1, cmt); // 인덱스 위치부터 1개를 cmt 객체로 수정
 						},
-						error: function () { alert('댓글 수정 에러 발생...'); }
+						error: function () {
+							alert('로그인 사용자만 댓글 수정이 가능합니다.');
+							location.href = '/member/login';
+						}
 					});
 				},
 
