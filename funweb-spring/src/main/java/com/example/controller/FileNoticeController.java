@@ -14,6 +14,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +50,6 @@ public class FileNoticeController {
 	private NoticeService noticeService;
 	@Autowired
 	private AttachService attachService;
-	@Autowired
-	private CommentService commentService;
 	@Autowired
 	private MySqlService mySqlService;
 
@@ -474,6 +478,39 @@ public class FileNoticeController {
 		return "redirect:/fileNotice/content";
 	} // POST - modify
 	
+	
+	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<Resource> download(int num, HttpServletRequest request) throws Exception {
+		// 첨부파일 번호에 해당하는 레코드 한개 가져오기
+		AttachVo attachVo = attachService.getAttachByNum(num);
+		
+		ServletContext application = request.getServletContext();
+		String realPath = application.getRealPath("/"); // webapp
+
+		// 다운로드할 파일정보를 File 객체로 준비
+		String dir = realPath + "/upload/" + attachVo.getUploadpath();
+		String filename = attachVo.getUuid() + "_" + attachVo.getFilename();
+		File file = new File(dir, filename);
+		
+		Resource resource = new FileSystemResource(file);
+		
+		if (!resource.exists()) {
+			log.info("다운로드할 파일이 존재하지 않습니다.");
+			return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND); // 404
+		}
+		
+		String downloadFilename = attachVo.getFilename();
+		System.out.println("utf-8 파일명: " + downloadFilename);
+
+		// 다운로드 파일명의 문자셋을 utf-8에서 iso-8859-1로 변환
+		downloadFilename = new String(downloadFilename.getBytes("utf-8"), "iso-8859-1");
+		System.out.println("iso-8859-1 파일명: " + downloadFilename);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=" + downloadFilename);
+		
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK); // 200코드 정상
+	} // download
 	
 	
 }

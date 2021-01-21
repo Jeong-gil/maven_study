@@ -101,7 +101,7 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					} else {
 						%>
 						<p>
-							<a href="/upload/<%=attachVo.getUploadpath() %>/<%=attachVo.getFilename() %>">
+							<a href="download.jsp?num=<%=attachVo.getNum() %>">
 								<%=attachVo.getFilename() %>
 							</a>
 						</p>					

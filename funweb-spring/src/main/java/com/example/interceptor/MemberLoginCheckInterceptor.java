@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 
-//회원 로그인 체크 용도의 인터셉터 클래스 정의
+// 회원 로그인 체크 용도의 인터셉터 클래스 정의
 @Component
 public class MemberLoginCheckInterceptor implements HandlerInterceptor {
 
@@ -19,16 +19,13 @@ public class MemberLoginCheckInterceptor implements HandlerInterceptor {
 		// 컨트롤러의 특정 메소드 호출시 그것보다 먼저 실행됨
 		
 		HttpSession session = request.getSession();
-		
-		// 로그인 안했을때는 로그인 화면으로 리다이렉트 이동시킴
 		String id = (String) session.getAttribute("id");
-		
-		if (id == null) {
-			response.sendRedirect("/member/login");
-			return false; // false를 리턴하면 컨트롤러 메소드 실행 안함
+		if (id != null) {  // 로그인 했을때는
+			return true;   // true를 리턴하여 해당 컨트롤러 메소드 실행함
 		}
-		
-		return true; // true를 리턴하면 컨트롤러 메소드 실행함
+		// 로그인 안했을때는 로그인 화면으로 리다이렉트 이동
+		response.sendRedirect("/member/login");
+		return false;  // false를 리턴하여 해당 컨트롤러 메소드 실행 안함
 	}
 
 	@Override
@@ -42,7 +39,6 @@ public class MemberLoginCheckInterceptor implements HandlerInterceptor {
 			throws Exception {
 		// 컨트롤러의 특정 메소드 호출시 컨트롤러 메소드 호출완료하고 리턴한 jsp 뷰 실행완료후 실행됨
 	}
-
 }
 
 

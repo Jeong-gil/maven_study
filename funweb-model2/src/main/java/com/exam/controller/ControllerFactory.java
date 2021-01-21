@@ -21,9 +21,9 @@ public class ControllerFactory {
 	private Map<String, Controller> map = new HashMap<>();
 	
 	private ControllerFactory() {
-		// Å°°ªÀº .do·Î ³¡³ª´Â ¿äÃ» URLÁÖ¼ÒÀÇ ÀÏºÎ - ¸í·É¾î °³³äÀ¸·Î »ç¿ë
+		// Å°ï¿½ï¿½ï¿½ï¿½ .doï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» URLï¿½Ö¼ï¿½ï¿½ï¿½ ï¿½Ïºï¿½ - ï¿½ï¿½É¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		
-		// ¸í·É¾î¿Í ¸í·É¾î¸¦ Ã³¸®ÇÏ´Â ÄÁÆ®·Ñ·¯ °´Ã¼¸¦ ½ÖÀ¸·Î µî·ÏÇÔ
+		// ï¿½ï¿½É¾ï¿½ï¿½ ï¿½ï¿½É¾î¸¦ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		map.put("/index", new IndexController());
 		
 		// company
@@ -38,23 +38,23 @@ public class ControllerFactory {
 		map.put("/memberLoginPro", new MemberLoginProController());
 		map.put("/memberLogout", new MemberLogoutController());
 		
-		// notice ÅØ½ºÆ® °Ô½ÃÆÇ
+		// notice ï¿½Ø½ï¿½Æ® ï¿½Ô½ï¿½ï¿½ï¿½
 		map.put("/notice", new NoticeController());
 		map.put("/writeForm", new WriteFormController());
 		map.put("/writePro", new WriteProController());
 		map.put("/content", new ContentController());
 		
-		// fileNotice ÀÚ·á½Ç °Ô½ÃÆÇ
+		// fileNotice ï¿½Ú·ï¿½ï¿½ ï¿½Ô½ï¿½ï¿½ï¿½
 		map.put("/fileNotice", new FileNoticeController());
 		map.put("/fileWriteForm", new FileWriteFormController());
 		map.put("/fileWritePro", new FileWriteProController());
 		map.put("/fileContent", new FileContentController());
-		
-	} // »ý¼ºÀÚ
+		map.put("/download", new DownloadController());
+	} // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	
 	public Controller getController(String command) {
-		// Map ÄÃ·º¼ÇÀº Å°°ªÀÌ Á¸ÀçÇÏÁö¾Ê´Â °ªÀ» ²¨³»¸é nullÀ» ¸®ÅÏÇÔ
+		// Map ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nullï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Controller controller = map.get(command);
 		return controller;
 	}

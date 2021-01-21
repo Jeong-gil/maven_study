@@ -96,7 +96,7 @@ span.reply-toggle:hover {
 									</c:when>
 									<c:otherwise>
 										<p>
-											<a href="/upload/${ attach.uploadpath }/${ attach.uuid }_${ attach.filename }">
+											<a href="/fileNotice/download?num=${ attach.num }">
 												${ attach.filename } 
 											</a>
 										</p>
@@ -187,10 +187,11 @@ span.reply-toggle:hover {
 									</div>
 									<p>{{ comment.content }}</p>
 									<div>
-										<small class="text-muted">{{
-											getDate(comment.updateDate) }}</small> <span class="reply-toggle"
-											v-on:click="toggleReplyWriteArea(index)"> {{
-											comment.writeOk ? '답글접기' : '답글쓰기' }} </span>
+										<small class="text-muted">{{ getDate(comment.updateDate) }}</small>
+										<span class="reply-toggle"
+											v-on:click="toggleReplyWriteArea(index)">
+											{{ comment.writeOk ? '답글접기' : '답글쓰기' }}
+										</span>
 									</div>
 								</div> <!-- 답댓글 작성 영역 -->
 								<div v-if="comment.writeOk" style="margin-left: 50px;">
@@ -340,7 +341,21 @@ span.reply-toggle:hover {
 				},
 				
 				getDate: function (str) {
-					let result = moment(str).format('YYYY-MM-DD a hh:mm:ss');
+					console.log(typeof str);
+					console.log(str);
+
+					let today = new Date(); // 현재시점 날짜시간
+					let date = new Date(str); // new Date('2021-01-06T02:44:32.000+00:00');
+
+					let gap = today.getTime() - date.getTime(); // 밀리초 차이값
+					let oneDay = 1000 * 60 * 60 * 24; // 밀리초 하루
+
+					let result;
+					if (gap > oneDay) { // 년월일
+						result = moment(str).format('YYYY-MM-DD');
+					} else { // gap <= oneDay   시분초
+						result = moment(str).format('a hh:mm:ss');
+					}
 					return result;
 				},
 

@@ -97,8 +97,9 @@ span.reply-toggle:hover {
 									</c:when>
 									<c:otherwise>
 										<p>
-											<a href="/upload/${ attach.uploadpath }/${ attach.filename }">
-												${ attach.filename } </a>
+											<a href="/download.do?num=${ attach.num }">
+												${ attach.filename }
+											</a>
 										</p>
 									</c:otherwise>
 								</c:choose>
