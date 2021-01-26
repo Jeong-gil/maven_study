@@ -1,6 +1,9 @@
 package com.example;
 
+import java.util.Timer;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -40,4 +43,15 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(memberStayLoggedInInterceptor)
 		.addPathPatterns("/*");
 	} // addInterceptors
+	
+	
+    // 스프링이 @Configuration 클래스의 @Bean 메소드를 자동호출해서
+	// 메소드로부터 리턴받은 객체를 스프링 빈으로 등록해줌
+	@Bean
+	public Timer timer() {
+		return new Timer(true);
+	}
 }
+
+
+

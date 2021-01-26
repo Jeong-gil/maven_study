@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import java.util.Timer;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,6 +11,9 @@ import lombok.extern.java.Log;
 @Controller // 클래스 안에서 @GetMapping 등의 애노테이션을 사용 가능
 @Log
 public class HomeController  {
+	
+	@Autowired
+	private Timer timer;
 
 	@GetMapping("/")
 	public String index() {

@@ -20,6 +20,12 @@ public class AttachService {
 		attachMapper.insertAttach(attachVo);
 	}
 	
+	public void insertAttaches(List<AttachVo> attaches) {
+		for (AttachVo attachVo : attaches) {
+			attachMapper.insertAttach(attachVo);
+		}
+	}
+	
 	public AttachVo getAttachByNum(int num) {
 		AttachVo attachVo = attachMapper.getAttachByNum(num);
 		return attachVo;

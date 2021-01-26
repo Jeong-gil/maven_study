@@ -3,6 +3,7 @@ package com.example;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
 @SpringBootApplication 애노테이션이 수행하는 일
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 */
 @SpringBootApplication  // 스프링 애노테이션
 @MapperScan("com.example.mapper")  // 마이바티스 애노테이션
+//@EnableScheduling  // 프로젝트 내의 @Schedule 붙은 클래스들을 스캔해서 스케줄에 맞게 호출해줌
 public class FunwebSpringApplication {
 
 	public static void main(String[] args) {

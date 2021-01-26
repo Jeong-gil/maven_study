@@ -1,6 +1,7 @@
 package com.exam.controller;
 
 import java.io.IOException;
+import java.util.Timer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -16,35 +17,36 @@ import javax.servlet.http.HttpServletResponse;
 public class FrontController extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
-		System.out.println("init() È£ÃâµÊ");
+		System.out.println("init() È£ï¿½ï¿½ï¿½");
 		
-		// application °´Ã¼ °¡Á®¿Í¼­ ÇÊ¿äÇÑ µ¥ÀÌÅÍ ÀúÀå
+		// application ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		ServletContext application = config.getServletContext();
-		application.setAttribute("aa", "¾È³ç");
+		application.setAttribute("timer", new Timer(true));
 		
-		String hello = (String) application.getAttribute("aa");
+//		Timer timer = (Timer) application.getAttribute("timer");
+//		timer.cancel();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doGet() È£ÃâµÊ");
+		System.out.println("doGet() È£ï¿½ï¿½ï¿½");
 		
-		// ¿äÃ» ÁÖ¼Ò
+		// ï¿½ï¿½Ã» ï¿½Ö¼ï¿½
 		// http://localhost:80/funweb-model2/index.do
 		// http://localhost:80/index.do
 		
-		// 1´Ü°è) ¸í·É¾î command ±¸ÇÏ±â
+		// 1ï¿½Ü°ï¿½) ï¿½ï¿½É¾ï¿½ command ï¿½ï¿½ï¿½Ï±ï¿½
 		
-		// URI ÁÖ¼Ò °¡Á®¿À±â
+		// URI ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		String requestURI = request.getRequestURI();
-		System.out.println("URI ÁÖ¼Ò: " + requestURI);
-		// URI ÁÖ¼Ò: /funweb-model2/index.do
+		System.out.println("URI ï¿½Ö¼ï¿½: " + requestURI);
+		// URI ï¿½Ö¼ï¿½: /funweb-model2/index.do
 		
-		// ÇÁ·ÎÁ§Æ® ÀÌ¸§ °æ·Î °¡Á®¿À±â
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		String contextPath = request.getContextPath();
 		System.out.println("contextPath: " + contextPath);
 		// contextPath: /funweb-model2
 		
-		// ¿äÃ» ¸í·É¾î ±¸ÇÏ±â
+		// ï¿½ï¿½Ã» ï¿½ï¿½É¾ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
 		String command = requestURI.substring(contextPath.length());
 		// command: /index.do
 		command = command.substring(0, command.indexOf(".do"));
@@ -52,39 +54,39 @@ public class FrontController extends HttpServlet {
 		// command: /index
 		
 		
-		// 2´Ü°è) ¸í·É¾î ½ÇÇàÇÏ±â
+		// 2ï¿½Ü°ï¿½) ï¿½ï¿½É¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 		Controller controller = null;
 		ControllerFactory factory = ControllerFactory.getInstance();
 		String strView = null;
 		
-		// ¸í·É¾î¿¡ ÇØ´çÇÏ´Â ÄÁÆ®·Ñ·¯ °´Ã¼ ±¸ÇÏ±â
+		// ï¿½ï¿½É¾î¿¡ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½Ï±ï¿½
 		controller = factory.getController(command);
 		if (controller == null) {
-			System.out.println(command + "¸¦ Ã³¸®ÇÏ´Â ÄÁÆ®·Ñ·¯°¡ ¾ø½À´Ï´Ù.");
+			System.out.println(command + "ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
 			return;
 		}
 		
 		try {
-			// ÄÁÆ®·Ñ·¯ °´Ã¼ ½ÇÇàÇÏ±â
+			// ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 			strView = controller.execute(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		
-		// 3´Ü°è) È­¸éÀÀ´ä(jsp½ÇÇà) ¶Ç´Â ¸®´ÙÀÌ·ºÆ®(.do) ÀÌµ¿
+		// 3ï¿½Ü°ï¿½) È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(jspï¿½ï¿½ï¿½ï¿½) ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ®(.do) ï¿½Ìµï¿½
 		if (strView == null) {
-			System.out.println("ÀÌµ¿ÇÒ È­¸é View Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+			System.out.println("ï¿½Ìµï¿½ï¿½ï¿½ È­ï¿½ï¿½ View ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
 			return;
 		}
 		
-		if (strView.startsWith("redirect:")) { // .do·Î ³¡³ª´Â °æ·Î
+		if (strView.startsWith("redirect:")) { // .doï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 			String redirectPath = strView.substring("redirect:".length());
 			response.sendRedirect(redirectPath);
 		} else {
 			String jspPath = "/WEB-INF/views/" + strView + ".jsp";
 			RequestDispatcher dispatcher = request.getRequestDispatcher(jspPath);
-			dispatcher.forward(request, response); // ÇØ´ç jsp ¹Ù·Î ½ÇÇàÇÏ±â
+			dispatcher.forward(request, response); // ï¿½Ø´ï¿½ jsp ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 		}
 		
 	} // doGet
@@ -92,14 +94,14 @@ public class FrontController extends HttpServlet {
 	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("doPost() È£ÃâµÊ");
+		System.out.println("doPost() È£ï¿½ï¿½ï¿½");
 		
-		request.setCharacterEncoding("utf-8"); // post¿äÃ» ÆÄ¶ó¹ÌÅÍ°ª ÇÑ±ÛÃ³¸®
+		request.setCharacterEncoding("utf-8"); // postï¿½ï¿½Ã» ï¿½Ä¶ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ñ±ï¿½Ã³ï¿½ï¿½
 		doGet(request, response);
 	} // doPost
 	
 	public void destroy() {
-		System.out.println("destroy() È£ÃâµÊ");
+		System.out.println("destroy() È£ï¿½ï¿½ï¿½");
 	}
 
 }

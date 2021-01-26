@@ -123,7 +123,6 @@ span.file-delete {
 		
 		fileCount--;
 	});
-
 </script>
 </body>
 </html>   
