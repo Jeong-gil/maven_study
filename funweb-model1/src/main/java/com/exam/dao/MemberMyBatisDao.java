@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.exam.mapper.MemberMapper;
 import com.exam.vo.MemberVo;
@@ -71,7 +72,7 @@ public class MemberMyBatisDao {
 			String dbPasswd = mapper.userCheck(id);
 			
 			if (dbPasswd != null) {
-				if (passwd.equals(dbPasswd)) {
+				if (BCrypt.checkpw(passwd, dbPasswd)) {  // passwd.equals(dbPasswd)
 					check = 1;
 				} else {
 					check = 0;

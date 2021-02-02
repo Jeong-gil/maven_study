@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 import java.util.Map;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class MemberService {
 		String dbPasswd = memberMapper.userCheck(id);
 		
 		if (dbPasswd != null) {
-			if (passwd.equals(dbPasswd)) {
+			if (BCrypt.checkpw(passwd, dbPasswd)) { // passwd.equals(dbPasswd)
 				check = 1;
 			} else {
 				check = 0;

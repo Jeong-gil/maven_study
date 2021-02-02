@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,11 @@ public class MemberController {
 	@PostMapping("/join")
 	public String join(MemberVo memberVo) {
 		log.info("POST - join() 호출됨");
+		
+		// 사용자 입력 패스워드를 암호화된 문자열로 변경
+		String passwd = memberVo.getPasswd();
+		String hashedPwd = BCrypt.hashpw(passwd, BCrypt.gensalt());
+		memberVo.setPasswd(hashedPwd);
 		
 		// 회원가입 날짜 설정
 		memberVo.setRegDate(new Timestamp(System.currentTimeMillis()));

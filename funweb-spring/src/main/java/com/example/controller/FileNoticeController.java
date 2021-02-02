@@ -229,6 +229,7 @@ public class FileNoticeController {
 					
 					// 생성할 썸네일 이미지 파일 경로와 이름을 준비
 					File thumbnailFile = new File(dir, "s_" + uploadFilename);
+					
 					// 썸네일 이미지 파일 생성하기
 					try (FileOutputStream fos = new FileOutputStream(thumbnailFile)) {
 						Thumbnailator.createThumbnail(multipartFile.getInputStream(), fos, 100, 100);
