@@ -33,9 +33,12 @@ String id = (String) session.getAttribute("id");
 		<ul>
 			<li><a href="/">HOME</a></li>
 			<li><a href="/company/welcome">COMPANY</a></li>
-			<li><a href="#">SOLUTIONS</a></li>
+			<li><a href="/chat/simpleChat">CHAT</a></li>
 			<li><a href="/notice/list">CUSTOMER CENTER</a></li>
 			<li><a href="#">CONTACT US</a></li>
 		</ul>
 	</nav>
 </header>
+
+
+
