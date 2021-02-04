@@ -17,6 +17,28 @@ div#chatbox {
 	background-color: lightgray;
 	overflow: auto;
 }
+
+div#chatbox span.me {
+	background-color: yellow;
+	border-radius: 10px;
+	padding: 10px;
+}
+div#chatbox span.others {
+	background-color: white;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+div#chatbox div {
+	margin-bottom: 25px;
+}
+
+div#chatbox div.me {
+	text-align: right;
+}
+div#chatbox div.others {
+	text-align: left;
+}
 </style>
 </head>
 <body>
@@ -32,11 +54,14 @@ div#chatbox {
 	<jsp:include page="/WEB-INF/views/include/submenuChat.jsp" />
 	
 	<article id="app">
-		<h1>간단한 채팅 서비스</h1>
+		<h1>채팅방 서비스</h1>
+		<h2>방제목 : ${ room.title }</h2>
 		<hr>
 		<div v-if="showNickname">
 			<input type="text" v-model="nickname" placeholder="닉네임을 입력해주세요" required autofocus>
-			<input type="button" value="채팅방 참여하기" v-on:click="enter"><br><br>
+			<input type="button" value="채팅방 참여하기" v-on:click="enter"><br>
+			방번호 UUID : <input type="text" value="${ room.roomId }" readonly><br>
+			<br>
 		</div>
 		<div v-if="showChatting">
 			<div id="chatbox" v-html="chatboxContent"></div>
@@ -53,6 +78,8 @@ div#chatbox {
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 <script>
+	const roomId = '${ room.roomId }';
+	var mySessionId;
 	var webSocket;
 
 	var app = new Vue({
@@ -69,7 +96,7 @@ div#chatbox {
 				this.connect();
 			},
 			connect: function () {
-				webSocket = new WebSocket('ws://localhost:8082/simpleChat');
+				webSocket = new WebSocket('ws://localhost:8082/chat');
 				webSocket.onopen = this.onOpen;
 				webSocket.onmessage = this.onMessage; // 소켓서버로부터 데이터를 받을때 호출됨
 				webSocket.onclose = this.onClose;
@@ -78,33 +105,74 @@ div#chatbox {
 				this.showNickname = false;
 				this.showChatting = true;
 				
-				webSocket.send(this.nickname + '님이 입장하셨습니다.');
+				let obj = {
+						type: 'ENTER',
+						roomId: roomId,
+						writer: this.nickname
+				};
+				let str = JSON.stringify(obj);
+				webSocket.send(str);
 			},
 			onMessage: function (event) {
-				let data = event.data;
-				this.chatboxContent += '<br>' + data;
+				let data = event.data; // json 문자열을 받음
+				let obj = JSON.parse(data);
+				let str = '';
+				
+				if (obj.type == 'SESSION_ID') {
+					mySessionId = obj.sessionId;
+				} else if (obj.type == 'ENTER') {
+					str = `<div>
+					           <span>\${obj.writer}님이 입장하셨습니다.</span>
+						   </div>`;
+				} else if (obj.type == 'LEAVE') {
+					str = `<div>
+					           <span>\${obj.writer}님이 퇴장하셨습니다.</span>
+					       </div>`;
+				} else { // obj.type == 'CHAT'
+					if (obj.sessionId == mySessionId) {
+						str = '<div class="me"><span class="me">';
+					} else {
+						str = '<div class="others"><span class="others">';
+					}
+					str += `\${obj.writer} : \${obj.message}</span></div>`;
+				}
+				this.chatboxContent += str;
 				this.scrollDown();
 			},
 			onClose: function () {
-				this.chatboxContent += '<br>' + '채팅방 연결을 끊었습니다.';
+				this.chatboxContent += '<div>채팅방 연결을 끊었습니다.</div>';
 				this.scrollDown();
 			},
 			disconnect: function () {
-				webSocket.send(this.nickname + '님이 퇴장하셨습니다.');
+				let obj = {
+						type: 'LEAVE',
+						roomId: roomId,
+						writer: this.nickname
+				};
+				let str = JSON.stringify(obj);
+				webSocket.send(str);
 				webSocket.close();
 			},
 			send: function () {
 				if (this.message == '') {
 					return;
 				}
-				webSocket.send(this.nickname + ' : ' + this.message);
+
+				let obj = {
+						type: 'CHAT',
+						//sendWho: 'ME',
+						roomId: roomId,
+						sessionId: mySessionId,
+						writer: this.nickname,
+						message: this.message
+				};
+				let str = JSON.stringify(obj);
+				webSocket.send(str);
 				this.message = '';
 			},
 			scrollDown: function () {
 				let chatbox = document.getElementById('chatbox');
-				console.log('chatbox.scrollHeight = ' + chatbox.scrollHeight);
-				console.log('chatbox.scrollTop = ' + chatbox.scrollTop);
-				chatbox.scrollTop = chatbox.scrollHeight + 50;
+				chatbox.scrollTop = chatbox.scrollHeight;
 			}
 		}
 	});

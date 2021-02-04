@@ -1,7 +1,7 @@
-package com.example.websocket;
+package com.example.chat;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleChatTextWebSocketHandler extends TextWebSocketHandler {
 	
-	private Set<WebSocketSession> sessions = new HashSet<>(); // 채팅방 역할 Set 컬렉션
+	private List<WebSocketSession> sessions = new ArrayList<>(); // 채팅방 역할 List 컬렉션
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
