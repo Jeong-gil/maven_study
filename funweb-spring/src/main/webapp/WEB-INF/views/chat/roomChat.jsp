@@ -12,7 +12,7 @@
 div#chatbox {
 	width: 400px;
 	height: 300px;
-	padding: 20px;
+	padding: 25px 15px;
 	border: 1px solid black;
 	background-color: lightgray;
 	overflow: auto;
@@ -94,6 +94,7 @@ div#chatbox div.others {
 		methods: {
 			enter: function () {
 				this.connect();
+				this.addWinEvt();
 			},
 			connect: function () {
 				webSocket = new WebSocket('ws://localhost:8082/chat');
@@ -173,6 +174,19 @@ div#chatbox div.others {
 			scrollDown: function () {
 				let chatbox = document.getElementById('chatbox');
 				chatbox.scrollTop = chatbox.scrollHeight;
+			},
+			addWinEvt: function() {
+				window.addEventListener('beforeunload', function (event) {
+					let dialogText = 'Dialog text here';
+					// Chrome requires returnValue to be set
+					event.returnValue = dialogText;
+					return dialogText;
+				});
+
+				let vm = this;
+				window.addEventListener('unload', function () {
+					vm.disconnect();
+				});
 			}
 		}
 	});

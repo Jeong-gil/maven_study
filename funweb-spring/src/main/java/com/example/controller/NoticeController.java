@@ -21,6 +21,9 @@ import com.example.domain.PageDto;
 import com.example.service.MySqlService;
 import com.example.service.NoticeService;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 @Controller
 @RequestMapping("/notice/*")
 public class NoticeController {
@@ -230,13 +233,5 @@ public class NoticeController {
 		// 글내용 상세보기 화면으로 리다이렉트 이동
 		return "redirect:/notice/content";
 	} // POST - replyWrite
-	
-	
 }
-
-
-
-
-
-
 

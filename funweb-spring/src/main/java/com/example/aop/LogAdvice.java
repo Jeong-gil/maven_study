@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 - Aspect(애스펙트) : 주변부 관심사(보조로직)을 의미하는 추상명사. 실제 구현 클래스를 의미하지 않음. 
 */
 
-@Aspect // 주변부 관심사(보조) 로직을 가진 클래스
+//@Aspect // 주변부 관심사(보조) 로직을 가진 클래스. 클래스 단위로 AOP기능 켜고 끄는 스위치 역할.
 @Component
 @Slf4j
 public class LogAdvice {

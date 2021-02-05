@@ -34,16 +34,16 @@ import com.example.domain.AttachVo;
 import com.example.domain.NoticeVo;
 import com.example.domain.PageDto;
 import com.example.service.AttachService;
-import com.example.service.CommentService;
 import com.example.service.MySqlService;
 import com.example.service.NoticeService;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
 
-@Log
+
 @Controller
 @RequestMapping("/fileNotice/*")
+@Slf4j
 public class FileNoticeController {
 	
 	@Autowired
