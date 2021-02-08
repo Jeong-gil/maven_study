@@ -50,7 +50,7 @@ public class ChatTextWebSocketHandler extends TextWebSocketHandler {
 		String roomId = chatMessage.getRoomId();
 		ChatRoom chatRoom = chatRoomRepository.getRoomById(roomId);
 		
-		chatRoom.handleMessage(session, chatMessage);
+		chatRoom.handleMessage(session, chatMessage, chatRoomRepository);
 	} // handleTextMessage
 
 	@Override

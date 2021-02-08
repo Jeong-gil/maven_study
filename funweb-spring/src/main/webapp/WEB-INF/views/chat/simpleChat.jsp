@@ -40,9 +40,9 @@ div#chatbox {
 		</div>
 		<div v-if="showChatting">
 			<div id="chatbox" v-html="chatboxContent"></div>
-			<input type="text" v-model="message" v-on:keyup.enter="send" placeholder="채팅글을 입력하세요" autofocus>
-			<input type="button" value="전송" v-on:click="send">
-			<input type="button" value="채팅방 연결끊기" v-on:click="disconnect">
+			<input type="text" v-model="message" v-on:keyup.enter="send" placeholder="채팅글을 입력하세요" autofocus v-bind:disabled="disableChat">
+			<input type="button" value="전송" v-on:click="send" v-bind:disabled="disableChat">
+			<input type="button" value="채팅방 연결끊기" v-on:click="disconnect" v-bind:disabled="disableChat">
 		</div>
 	</article>
     
@@ -62,7 +62,8 @@ div#chatbox {
 			message: '',
 			chatboxContent: '',
 			showNickname: true,
-			showChatting: false
+			showChatting: false,
+			disableChat: false
 		},
 		methods: {
 			enter: function () {
@@ -91,11 +92,16 @@ div#chatbox {
 				this.scrollDown();
 			},
 			disconnect: function () {
+				if (webSocket == null) {
+					return;
+				}
 				webSocket.send(this.nickname + '님이 퇴장하셨습니다.');
 				webSocket.close();
+				webSocket = null;
+				this.disableChat = true;
 			},
 			send: function () {
-				if (this.message == '') {
+				if (this.message == '' || webSocket == null) {
 					return;
 				}
 				webSocket.send(this.nickname + ' : ' + this.message);

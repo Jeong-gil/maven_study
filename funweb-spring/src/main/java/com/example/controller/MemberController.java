@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -23,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.chart.MemberChartTextWebSocketHandler;
 import com.example.domain.MemberVo;
 import com.example.service.MemberService;
+import com.google.gson.Gson;
 
 import lombok.extern.java.Log;
 
@@ -35,6 +38,10 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private MemberChartTextWebSocketHandler memberChartSocketHandler;
+	@Autowired
+	private Gson gson;
 	
 //	
 //	public void setMemberService(MemberService memberService) {
@@ -51,7 +58,7 @@ public class MemberController {
 	
 	
 	@PostMapping("/join")
-	public String join(MemberVo memberVo) {
+	public String join(MemberVo memberVo) throws Exception {
 		log.info("POST - join() 호출됨");
 		
 		// 사용자 입력 패스워드를 암호화된 문자열로 변경
@@ -65,6 +72,12 @@ public class MemberController {
 		
 		// 회원가입 처리
 		memberService.addMember(memberVo);
+		
+		//===== 실시간 차트 서비스에 소켓 연결중인 유저들에게 브로드캐스트하기 =====
+		Map<String, List<Object>> map = memberService.getAjaxChartDataMember();
+		String message = gson.toJson(map);
+		memberChartSocketHandler.broadcast(message);
+		//==========================================================================
 		
 		return "redirect:/member/login";
 	}
@@ -84,7 +97,7 @@ public class MemberController {
 	} // joinIdDupCheck
 	
 	
-	@GetMapping(value = "/ajax/joinIdDupChk", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/ajax/joinIdDupChk", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody // 리턴 객체를 JSON 문자열로 변환해서 응답을 줌
 	public Map<String, Boolean> ajaxJoinIdDupChk(String id) {
 		
