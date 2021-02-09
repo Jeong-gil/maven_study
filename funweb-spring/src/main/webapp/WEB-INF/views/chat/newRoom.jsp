@@ -39,7 +39,7 @@ div#chatbox {
 			<input type="text" name="title" placeholder="채팅방 제목을 입력해주세요" required autofocus>
 			<br>
 			<input type="submit" value="채팅방 생성하기">
-			<input type="button" value="목록으로 돌아가기" onclick="location.href = '/chat/list'">
+			<input type="button" value="목록으로 돌아가기" onclick="/chat/list">
 		</form>
 	</article>
     

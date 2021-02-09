@@ -5,7 +5,11 @@ import java.util.Map;
 
 import com.example.domain.MemberVo;
 
+// ���̹�Ƽ������ Mapper �������̽��� ������ ������ ��!
 public interface MemberMapper {
+
+	// ������ �޼ҵ尡 �Ű������� 2�� �̻� ��������
+	// @Param �ֳ����̼� ������ �̸��� �����ؾ� ��
 	
 	//@Select("SELECT * FROM member WHERE id = #{id}")
 	MemberVo getMemberById(String id);

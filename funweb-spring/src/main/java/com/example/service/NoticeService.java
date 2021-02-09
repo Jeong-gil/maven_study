@@ -14,7 +14,6 @@ import com.example.mapper.AttachMapper;
 import com.example.mapper.NoticeMapper;
 
 @Service
-//@Transactional  // 이 클래스의 모든 메소드가 각각 한개의 트랜잭션 단위로 수행됨
 public class NoticeService {
 	
 	@Autowired

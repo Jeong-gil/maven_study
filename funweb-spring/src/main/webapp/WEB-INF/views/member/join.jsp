@@ -100,8 +100,7 @@
 		$.ajax({
 			url: '/member/ajax/joinIdDupChk',
 			data: { id: id },
-			method: 'GET',
-			contentType: 'application/json; charset=UTF-8',
+			//method: 'GET',
 			success: function (response) {
 				console.log(typeof response);
 				console.log(response);

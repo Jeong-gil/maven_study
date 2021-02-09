@@ -4,7 +4,7 @@
         <ul>
             <li> <a href="/company/welcome">Welcome</a></li>
             <li> <a href="/company/history">History</a></li>
-            <li> <a href="/company/chart">Charts</a></li>
-            <li> <a href="/company/realtimeChart">Realtime Charts</a></li>
+            <li> <a href="#">Newsroom</a></li>
+            <li> <a href="#">Public Policy</a></li>
     	</ul>   
     </nav>

@@ -28,16 +28,12 @@ public class ChatRoom { // 채팅방
 		this.sessions = new HashSet<>();
 	}
 	
-	public void handleMessage(WebSocketSession session, ChatMessage chatMessage, ChatRoomRepository chatRoomRepository) throws IOException {
+	public void handleMessage(WebSocketSession session, ChatMessage chatMessage) throws IOException {
 		
 		if (chatMessage.getType() == MessageType.ENTER) {
 			sessions.add(session); // 입장한 사용자 세션을 현재방(참가방) Set에 추가하기
 		} else if (chatMessage.getType() == MessageType.LEAVE) {
 			sessions.remove(session); // 퇴장한 사용자 세션을 현재방(참가방) Set에서 제거하기
-			
-			if (sessions.size() == 0) { // 사용자 한명 퇴장 후 채팅방 인원수가 0이면
-				chatRoomRepository.removeRoomById(roomId); // 현재 채팅방을 전체 채팅방 목록에서 제거하기
-			}
 		}
 		
 		send(chatMessage);
